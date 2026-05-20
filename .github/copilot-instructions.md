@@ -189,5 +189,5 @@ See [`TEAM-FLOW.md`](../TEAM-FLOW.md) for handoff diagrams and the daily timelin
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read `specs/001-generate-payment-cycle/plan.md`
 <!-- SPECKIT END -->
