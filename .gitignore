@@ -2,7 +2,9 @@
 # Note: legacy/ is bundled with the kit (real folder) and IS committed.
 reference/
 prototype
-infra
+# infra/ is tracked (real Terraform files, not a symlink)
+infra/.terraform/
+infra/.terraform.lock.hcl
 
 # OS files
 .DS_Store
