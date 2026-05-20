@@ -1,0 +1,21 @@
+# VCS
+.git/
+
+# Node/JS
+node_modules/
+**/node_modules/
+.next/
+coverage/
+
+# Build outputs
+build/
+dist/
+target/
+
+# Environment and logs
+.env*
+*.log*
+
+# Docker metadata
+Dockerfile*
+.dockerignore

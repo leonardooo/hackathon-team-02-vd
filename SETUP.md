@@ -431,34 +431,40 @@ Commit and push to `develop`. Now Copilot suggestions know who is on your team.
 ### 9.1 Install globally on your laptop
 
 ```bash
-npm install -g @github/spec-kit
-spec-kit --version
+# Recommended: install the official Specify CLI from the GitHub repo
+# Replace vX.Y.Z with the latest tag from https://github.com/github/spec-kit/releases
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+specify version
 ```
+
+> `@github/spec-kit` is **not** published on npm. The official maintained install is the `specify` CLI from the `github/spec-kit` repository.
 
 ### 9.2 Initialize in the team repo
 
 Run this once, in the root of your team repo:
 
 ```bash
-spec-kit init
+specify init . --force --integration copilot
 ```
 
-This creates a `.spec-kit/` folder with a starter project file.
+This creates a `.specify/` folder with the starter templates, scripts, and Copilot integration files.
 
 ### 9.3 Author a feature
 
-```bash
-spec-kit new "payment-cycle-generation"
+In Copilot Chat, run:
+
+```text
+/speckit.specify Allow operators to generate a monthly payment cycle for active beneficiaries.
 ```
 
-Spec-Kit asks you (interactively):
+Then refine the generated spec with the team. At minimum, cover:
 
 1. **Goal** — write one sentence: *"Allow operators to generate a monthly payment cycle for active beneficiaries."*
 2. **Personas** — who benefits? (the operator, the beneficiary)
 3. **Acceptance criteria** — list what must be true when this is done
 4. **Out-of-scope** — what we are explicitly NOT doing now
 
-Output: `.spec-kit/payment-cycle-generation/spec.md` — a clean spec your whole team can read.
+Output: a new spec folder under `.specify/specs/` with a `spec.md` file your whole team can read.
 
 ### 9.4 When to use Spec-Kit vs Specky
 
@@ -608,7 +614,7 @@ Each persona has a **default daily loop**. Run it as many times as needed during
 
 ```
 1. Read the Stage 1 findings (glossary, business rules catalog)
-2. Open Spec-Kit: spec-kit new "feature-name"
+2. Open Spec-Kit: /speckit.specify "feature-name"
 3. Validate the draft with stakeholder personas (PO + EA)
 4. Promote to Specky: @sdd-init feature-name
 5. Run @spec-engineer to produce SPECIFICATION.md (EARS)
@@ -702,7 +708,7 @@ The team lead reads each item out loud. Each person confirms on their laptop.
 - [ ] `docker compose up -d` succeeds (or facilitator hands you the prototype tarball at Stage 3)
 - [ ] Every Copilot Chat answers "What stack are we using?" with the right answer
 - [ ] Every member has installed Specky: `specky doctor` reports no errors
-- [ ] `spec-kit --version` prints a version on every laptop
+- [ ] `specify version` prints a version on every laptop
 - [ ] Open **New issue** on GitHub and verify 3 templates appear (spec, adr, task)
 - [ ] All 10 team members visible in repo Settings → Collaborators
 - [ ] Each persona has read their card in `personas/XX-role.md`

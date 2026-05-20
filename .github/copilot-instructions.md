@@ -145,11 +145,11 @@ Before writing any EARS in Stage 2, your pair MUST have read the assigned Natura
 
 | Pair | Persona A | Persona B | SDLC phase |
 |------|-----------|-----------|------------|
-| 1 · Vision | [ ] 01 Product Owner — name? | [ ] 02 Requirements Engineer — name? | Discovery + Specification |
-| 2 · Architecture | [ ] 03 Enterprise Architect — name? | [ ] 04 Software Architect — name? | Specification + Design |
-| 3 · Implementation | [ ] 05 Technical Lead — name? | [ ] 06 Developer — name? | Implementation + Evolution |
-| 4 · Quality | [ ] 07 DBA — name? | [ ] 08 QA Engineer — name? | Implementation (data + tests) |
-| 5 · Operations | [ ] 09 DevOps Engineer — name? | [ ] 10 Tech Writer — name? | Cross-cutting + Evolution |
+| 1 · Vision | [x] 01 Product Owner — Mariz | [x] 02 Requirements Engineer — Mariz | Discovery + Specification |
+| 2 · Architecture | [x] 03 Enterprise Architect — Fabio | [x] 04 Software Architect — Fabio | Specification + Design |
+| 3 · Implementation | [x] 05 Technical Lead — Leo | [x] 06 Developer — Leo | Implementation + Evolution |
+| 4 · Quality | [x] 07 DBA — Thaise | [x] 08 QA Engineer — Thaise | Implementation (data + tests) |
+| 5 · Operations | [x] 09 DevOps Engineer — Iza | [x] 10 Tech Writer — Iza | Cross-cutting + Evolution |
 
 See [`TEAM-FLOW.md`](../TEAM-FLOW.md) for handoff diagrams and the daily timeline.
 
@@ -186,3 +186,8 @@ See [`TEAM-FLOW.md`](../TEAM-FLOW.md) for handoff diagrams and the daily timelin
 - [Infrastructure modules](../infra) — Terraform Azure modules (symlink, created by setup.sh)
 - [Specky SDD Plugin](https://github.com/paulasilvatech/specky) — Spec-Driven Development engine
 - Trilingual didactic docs: [`pt-br/`](../pt-br/) · [`es/`](../es/) · [`en/`](../en/)
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read `specs/001-generate-payment-cycle/plan.md`
+<!-- SPECKIT END -->
