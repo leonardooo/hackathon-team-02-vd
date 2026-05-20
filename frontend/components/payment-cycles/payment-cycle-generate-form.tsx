@@ -1,33 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { generatePaymentCycle } from '../../lib/api/payment-cycles';
+import { generateCycleAction } from '../../app/(operator)/payment-cycles/actions';
 
 export function PaymentCycleGenerateForm() {
-  const [competence, setCompetence] = useState('');
-  const [initiatedBy, setInitiatedBy] = useState('operator');
   const [message, setMessage] = useState<string | null>(null);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function onSubmit(formData: FormData) {
     setMessage(null);
-
-    try {
-      const result = await generatePaymentCycle({ competence, initiatedBy });
-      setMessage(`Cycle ${result.competence} generated with ${result.includedCount} included`);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Unknown error');
-    }
+    const result = await generateCycleAction(formData);
+    setMessage(result.error ?? result.success ?? null);
   }
 
   return (
-    <form className="grid gap-4 rounded-xl border p-4" onSubmit={onSubmit}>
+    <form className="grid gap-4 rounded-xl border p-4" action={onSubmit}>
       <label className="grid gap-1">
         <span className="text-sm font-medium">Competence (YYYYMM)</span>
         <input
           className="rounded border px-3 py-2"
-          value={competence}
-          onChange={(event) => setCompetence(event.target.value)}
+          name="competence"
           pattern="^[0-9]{6}$"
           required
         />
@@ -37,8 +28,8 @@ export function PaymentCycleGenerateForm() {
         <span className="text-sm font-medium">Operator</span>
         <input
           className="rounded border px-3 py-2"
-          value={initiatedBy}
-          onChange={(event) => setInitiatedBy(event.target.value)}
+          name="initiatedBy"
+          defaultValue="operator"
           required
         />
       </label>

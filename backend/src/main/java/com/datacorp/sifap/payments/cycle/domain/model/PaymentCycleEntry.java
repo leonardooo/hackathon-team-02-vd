@@ -62,7 +62,8 @@ public class PaymentCycleEntry {
       entry.inclusionStatus = InclusionStatus.INCLUDED;
       entry.grossAmount = gross;
       entry.discountAmount = discount;
-      entry.netAmount = net;
+      // REQ-PAG-005: net amount floor at zero — if discounts exceed gross, net = 0
+      entry.netAmount = net.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : net;
       return entry;
     }
 

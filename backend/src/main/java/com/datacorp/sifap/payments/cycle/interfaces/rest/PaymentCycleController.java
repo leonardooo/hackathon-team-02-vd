@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,20 +78,20 @@ public class PaymentCycleController {
 
     @ExceptionHandler(DuplicatePaymentCycleException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponseDto handleDuplicate(DuplicatePaymentCycleException exception) {
-        return new ErrorResponseDto("DUPLICATE_CYCLE", exception.getMessage());
+    public ProblemDetail handleDuplicate(DuplicatePaymentCycleException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponseDto handleNotFound(NoSuchElementException exception) {
-        return new ErrorResponseDto("CYCLE_NOT_FOUND", "Requested cycle was not found");
+    public ProblemDetail handleNotFound(NoSuchElementException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Requested cycle was not found");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ErrorResponseDto handleInvalidArgument(IllegalArgumentException exception) {
+    public ProblemDetail handleInvalidArgument(IllegalArgumentException exception) {
         LOGGER.warn("Rejected payment-cycle request reason={}", exception.getMessage());
-        return new ErrorResponseDto("INVALID_REQUEST", "Request could not be processed");
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, "Request could not be processed");
     }
 }
