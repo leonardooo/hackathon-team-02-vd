@@ -117,7 +117,7 @@ jobs:
       - name: Type-check
         run: pnpm typecheck
       - name: Test
-        run: pnpm test --run --coverage
+        run: pnpm test
 
   infra:
     name: Infra (Terraform)
