@@ -1,0 +1,12 @@
+%% Dependency Map Template — Run /map-dependencies to generate
+flowchart TB
+    PROG1["PROG1.nat<br/>Main program"]
+    PROG2["PROG2.nat<br/>Subprogram"]
+    DDM1[("DDM-FILE1<br/>Master data")]
+    PROG1 -->|"CALLNAT L45"| PROG2
+    PROG1 -->|"READ L55"| DDM1
+    classDef prog fill:#0f172a,stroke:#334155,color:#e2e8f0
+    classDef data fill:#1e293b,stroke:#475569,color:#e2e8f0
+    class PROG1,PROG2 prog
+    class DDM1 data
+    %% Replace placeholders. Every edge MUST cite source file and line.

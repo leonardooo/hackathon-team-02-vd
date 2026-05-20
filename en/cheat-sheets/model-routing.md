@@ -1,0 +1,101 @@
+---
+title: "Cheat sheet — Claude Model Routing in Copilot"
+description: "One page. When to use Claude Haiku 4.5, Sonnet 4.6, or Opus 4.6 inside GitHub Copilot. Simple rules, common cases."
+locale: "en"
+canonical_path: "06-kit-repositorio-times/cheat-sheets/model-routing.md"
+author: "Paula Silva, Americas Software GBB, Microsoft"
+date: "2026-05-18"
+version: "2.0.0"
+status: "approved"
+tags: ["cheat-sheet", "copilot", "claude", "model-routing", "workshop", "en"]
+---
+
+# Claude Model Routing — Cheat Sheet
+
+> **When to use this card:** every time the response feels too slow, too shallow, or wrong-shape. Pick the smallest model that solves your case.
+
+## Master rule
+
+> Bigger model = more capable and slower. Use the smallest one that solves your case. Save Opus for decisions, not for batch production.
+
+```mermaid
+flowchart LR
+ classDef haiku fill:#E6F7E1,stroke:#7FBA00,color:#0A0A0A
+ classDef sonnet fill:#FFF7E0,stroke:#FFB900,color:#0A0A0A
+ classDef opus fill:#F25022,stroke:#B33816,color:#fff
+
+ H[Haiku 4.5<br/>fast + cheap]:::haiku
+ S[Sonnet 4.6<br/>default]:::sonnet
+ O[Opus 4.6<br/>decisions]:::opus
+
+ H -- "if shallow,<br/>step up" --> S -- "if architectural,<br/>step up" --> O
+```
+
+## The three models
+
+| Model | When to use | Relative cost | Speed |
+|-------|-------------|---------------|-------|
+| **Haiku 4.5** | Mechanical task, simple transformation, small context | Low | Fast |
+| **Sonnet 4.6** | Day-to-day default. Code, tests, refactor, explanation | Medium | Medium |
+| **Opus 4.6** | Architectural decision, impact analysis, trade-off discussion | High | Slow |
+
+## Common cases by persona
+
+### Product Owner / Requirements Engineer
+- Writing a user story → **Sonnet**.
+- Refining EARS that are already written → **Haiku**.
+- Discussing whether a requirement should be v1 or v2 → **Opus** (once, decide, move on).
+
+### Architects (Enterprise + Software)
+- Drawing C4 with Mermaid → **Sonnet**.
+- Choosing between two patterns (hexagonal vs layered) → **Opus**.
+- Generating a syntactic variation of an existing diagram → **Haiku**.
+
+### Technical Lead
+- Reviewing a medium-sized PR → **Sonnet**.
+- Deciding the project-wide standard (transaction style, for example) → **Opus** at the start; **Sonnet** afterward to apply it.
+- Answering "does this code compile?" → **Haiku**.
+
+### Developer
+- Generating an implementation of a service → **Sonnet**.
+- Writing a simple unit test → **Haiku**.
+- Debating the structure of a class before writing it → **Opus**.
+
+### DBA
+- Translating an Adabas DDM → SQL → **Sonnet** (with Opus for the weirdest case).
+- Generating repetitive DDL → **Haiku**.
+- Deciding the partitioning strategy for `payment` → **Opus**.
+
+### QA Engineer
+- Generating a JUnit 5 skeleton → **Haiku**.
+- Writing a non-trivial integration test → **Sonnet**.
+- Deciding whether a given scenario is worth Testcontainers vs a mock → **Opus**.
+
+### DevOps Engineer
+- Generating a standard GitHub Actions YAML → **Sonnet**.
+- Adjusting trivial commands in the workflow → **Haiku**.
+- Deciding the Azure topology → **Opus**.
+
+### Tech Writer
+- Reviewing the README's style → **Haiku**.
+- Drafting an ADR → **Sonnet**.
+- Deciding the global documentation structure → **Opus**, once.
+
+## Signs you're on the wrong model
+
+- **You're waiting 30 seconds for a trivial answer** → drop to a smaller model.
+- **The answer was shallow on a critical decision** → move up to Opus.
+- **The answer is spot on but you wanted a discussion** → move up to Opus.
+- **You're stacking prompts to make Opus generate 400 files** → drop to Sonnet or Haiku.
+
+## Paula's tip
+
+Don't treat Opus as "the good one" and Haiku as "the bad one." Opus on a mechanical task is wasteful; Haiku on a decision is risky. The right model is the cheapest one that doesn't let you down.
+
+## Navigation
+
+| Previous | Home | Next |
+|----------|------|------|
+| [Copilot 3 Modes](copilot-3-modes.md) | [Cheat sheets](README.md) | [Specky Workflow](specky-workflow.md) |
+
+— Paula
