@@ -20,7 +20,7 @@ services:
 
   backend:
     build:
-      context: ./prototype/backend
+      context: ./backend
       dockerfile: Dockerfile
     container_name: sifap-backend
     environment:
@@ -29,6 +29,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-sifap}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-sifap_local}
       SIFAP_JWT_SECRET: ${SIFAP_JWT_SECRET:-docker-dev-secret-min-32-chars-long!!}
+      # Logs estruturados em JSON (ECS format) — obrigatório para observabilidade
+      LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
     ports:
       - "8080:8080"
     depends_on:
@@ -45,7 +47,7 @@ services:
 
   frontend:
     build:
-      context: ./prototype/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: sifap-frontend
     environment:
