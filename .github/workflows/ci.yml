@@ -115,7 +115,7 @@ jobs:
           terraform validate
 
   security-scan:
-    name: Security scan (OWASP + Trivy)
+    name: Security scan (Trivy)
     needs: [backend, frontend]
     if: |
       always() &&
