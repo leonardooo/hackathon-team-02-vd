@@ -15,9 +15,9 @@ tags: ["discovery", "report", "stage-1", "template", "es"]
 > Este documento consolida todos los hallazgos del Stage 1.
 > Llena cada sección con las conclusiones del equipo. Este reporte es el input del Stage 2 — sin él no hay base para escribir EARS.
 
-**Equipo**: [Nombre del equipo]
-**Fecha**: 19/05/2026
-**Participantes**: [Lista los miembros y sus personas]
+**Equipo**: Team-02-VerdeDanadinho
+**Fecha**: 20/05/2026
+**Participantes**: Marcelo Mariz (Par 1 — Product Owner + Requirements Engineer), Fabio Guerra (Par 2 — Enterprise Architect + Software Architect), Leonardo Assis (Par 3 — Technical Lead + Developer), Thaise Dantas (Par 4 — DBA + QA Engineer), Izabella Campos (Par 5 — DevOps Engineer + Tech Writer)
 
 ---
 

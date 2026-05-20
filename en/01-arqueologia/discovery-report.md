@@ -31,9 +31,9 @@ flowchart LR
 
 **Pair 1 (Vision)** writes the report; all pairs contribute their pieces.
 
-**Team**: [Team name]
-**Date**: 2026-05-19
-**Members**: [List members and personas]
+**Team**: Team-02-VerdeDanadinho
+**Date**: 2026-05-20
+**Members**: Marcelo Mariz (Pair 1 — Product Owner + Requirements Engineer), Fabio Guerra (Pair 2 — Enterprise Architect + Software Architect), Leonardo Assis (Pair 3 — Technical Lead + Developer), Thaise Dantas (Pair 4 — DBA + QA Engineer), Izabella Campos (Pair 5 — DevOps Engineer + Tech Writer)
 
 ---
 

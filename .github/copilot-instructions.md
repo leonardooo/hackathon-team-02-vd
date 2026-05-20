@@ -145,11 +145,11 @@ Before writing any EARS in Stage 2, your pair MUST have read the assigned Natura
 
 | Pair | Persona A | Persona B | SDLC phase |
 |------|-----------|-----------|------------|
-| 1 · Vision | [ ] 01 Product Owner — name? | [ ] 02 Requirements Engineer — name? | Discovery + Specification |
-| 2 · Architecture | [ ] 03 Enterprise Architect — name? | [ ] 04 Software Architect — name? | Specification + Design |
-| 3 · Implementation | [ ] 05 Technical Lead — name? | [ ] 06 Developer — name? | Implementation + Evolution |
-| 4 · Quality | [ ] 07 DBA — name? | [ ] 08 QA Engineer — name? | Implementation (data + tests) |
-| 5 · Operations | [ ] 09 DevOps Engineer — name? | [ ] 10 Tech Writer — name? | Cross-cutting + Evolution |
+| 1 · Vision | 01 Product Owner — Marcelo Mariz | 02 Requirements Engineer — Marcelo Mariz | Discovery + Specification |
+| 2 · Architecture | 03 Enterprise Architect — Fabio Guerra | 04 Software Architect — Fabio Guerra | Specification + Design |
+| 3 · Implementation | 05 Technical Lead — Leonardo Assis | 06 Developer — Leonardo Assis | Implementation + Evolution |
+| 4 · Quality | 07 DBA — Thaise Dantas | 08 QA Engineer — Thaise Dantas | Implementation (data + tests) |
+| 5 · Operations | 09 DevOps Engineer — Izabella Campos | 10 Tech Writer — Izabella Campos | Cross-cutting + Evolution |
 
 See [`TEAM-FLOW.md`](../TEAM-FLOW.md) for handoff diagrams and the daily timeline.
 
