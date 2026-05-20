@@ -64,17 +64,29 @@ An operator is prevented from generating conflicting cycles for the same payment
 ### Functional Requirements
 
 - **FR-001**: System MUST allow an operator to generate a payment cycle for a selected monthly period.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (monthly batch payment cycle generation)
 - **FR-002**: System MUST include only beneficiaries who are active and eligible for payment in the selected period.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm` (beneficiary active status), `legacy/natural-programs/BATCHPGT.NSN` (eligibility filtering rules)
 - **FR-003**: System MUST exclude beneficiaries who are inactive or otherwise not eligible for the selected period.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm` (ineligibility detection), `legacy/natural-programs/BATCHPGT.NSN` (exclusion logic)
 - **FR-004**: System MUST create a cycle record with the selected period, generation timestamp, initiating operator, and current cycle status.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (cycle state tracking)
 - **FR-005**: System MUST provide the operator with a summary of the generated cycle, including the number of included beneficiaries and the number of excluded beneficiaries.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (batch result summary reporting)
 - **FR-006**: System MUST provide exclusion reasons for each beneficiary not included in the cycle.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm` (exclusion reason codes), `legacy/natural-programs/BATCHPGT.NSN` (reason assignment logic)
 - **FR-007**: System MUST prevent creation of more than one active payment cycle for the same monthly period.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (duplicate cycle prevention check)
 - **FR-008**: System MUST preserve the beneficiary list and eligibility outcome used at the time the cycle is generated.
+  - source_legacy: `legacy/adabas-ddms/PAGAMENTO.ddm` (snapshot semantics of payment cycles)
 - **FR-009**: System MUST make generated cycle details available for later operator review.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (cycle review and reconciliation workflows)
 - **FR-010**: System MUST notify the operator when cycle generation cannot be completed and state the reason in clear business language.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (error handling and operator notifications in batch context)
 - **FR-011**: System MUST generate the same beneficiary set when the same source data and eligibility conditions are used for the same period.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm`, `legacy/adabas-ddms/PAGAMENTO.ddm` (deterministic batch generation semantics)
 - **FR-012**: System MUST record an audit trail for cycle generation attempts, including successful and blocked attempts.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (batch attempt audit logging), research.md Decision 2 (separate audit structure as learned from legacy performance issues)
 
 ### Key Entities *(include if feature involves data)*
 
@@ -88,10 +100,15 @@ An operator is prevented from generating conflicting cycles for the same payment
 ### Measurable Outcomes
 
 - **SC-001**: Operators can generate a monthly payment cycle for a valid period in under 5 minutes without needing manual recalculation outside the system.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (operational performance expectations for monthly batch workflow)
 - **SC-002**: 100% of beneficiaries included in a generated cycle meet the active and eligible criteria for the selected period.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm`, `legacy/natural-programs/BATCHPGT.NSN` (eligibility rule validation)
 - **SC-003**: 100% of beneficiaries excluded from a generated cycle have a visible exclusion reason.
+  - source_legacy: `legacy/adabas-ddms/BENEFICIARIO.ddm` (reason codes), `legacy/natural-programs/BATCHPGT.NSN` (reason assignment)
 - **SC-004**: 100% of attempts to generate a second active cycle for the same period are prevented.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (duplicate prevention enforcement)
 - **SC-005**: At least 95% of operators complete cycle generation for a standard monthly period on their first attempt during acceptance testing.
+  - source_legacy: `legacy/natural-programs/BATCHPGT.NSN` (operator usability expectations from legacy batch experience)
 
 ## Assumptions
 

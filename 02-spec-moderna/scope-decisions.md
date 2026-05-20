@@ -77,6 +77,6 @@
 
 ## Aprovacao
 
-- [ ] Pair 1 (Product Owner) aprovou as decisoes de escopo
+- [x] Pair 1 (Product Owner) aprovou as decisoes de escopo
 - [x] Pair 2 (Enterprise Architect) validou a viabilidade tecnica
-- [ ] Time concordou com as prioridades
+- [x] Time concordou com as prioridades

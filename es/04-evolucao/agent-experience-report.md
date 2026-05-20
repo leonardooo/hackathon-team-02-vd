@@ -15,9 +15,9 @@ tags: ["agent", "report", "stage-4", "template", "es"]
 > Llena este reporte al final del Stage 4.
 > Sé honesto — queremos aprender qué funciona y qué no.
 
-**Equipo**: [Nombre del equipo]
-**Fecha**: 19/05/2026
-**Participantes**: [Lista los miembros]
+**Equipo**: Team-02-VerdeDanadinho
+**Fecha**: 20/05/2026
+**Participantes**: Marcelo Mariz (Par 1), Fabio Guerra (Par 2), Leonardo Assis (Par 3), Thaise Dantas (Par 4), Izabella Campos (Par 5)
 
 ---
 
