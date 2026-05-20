@@ -118,10 +118,7 @@ jobs:
     name: Security scan (Trivy)
     needs: [backend, frontend]
     if: |
-      always() &&
-      (needs.backend.result != 'failure') &&
-      (needs.frontend.result != 'failure') &&
-      (needs.backend.result == 'success' || needs.frontend.result == 'success')
+      always() && (needs.backend.result == 'success' || needs.frontend.result == 'success')
     runs-on: ubuntu-latest
     permissions:
       contents: read
