@@ -22,9 +22,9 @@ tags: ["scope", "decisions", "stage-2", "template", "es"]
 
 No vas a poder migrar todo en 2 horas de código en el Stage 3. Aceptar eso es lo primero. Lo segundo es ser **explícito** sobre lo que queda fuera — si el Stage 3 implementa una función que el PO descartó, gastaron tiempo en vano.
 
-**Equipo**: [Nombre del equipo]
-**Fecha**: 19/05/2026
-**Pair 1 (Product Owner) responsable**: [Nombre]
+**Equipo**: Team-02-VerdeDanadinho
+**Fecha**: 20/05/2026
+**Pair 1 (Product Owner) responsable**: Marcelo Mariz
 
 ---
 

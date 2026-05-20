@@ -32,9 +32,9 @@ flowchart LR
 
 **Pair 5 (Tech Writer)** writes; **Pair 3 (TL + Dev)** contributes the technical observations from running the Agent.
 
-**Team**: [Team name]
-**Date**: 2026-05-19
-**Members**: [List members]
+**Team**: Team-02-VerdeDanadinho
+**Date**: 2026-05-20
+**Members**: Marcelo Mariz (Pair 1), Fabio Guerra (Pair 2), Leonardo Assis (Pair 3), Thaise Dantas (Pair 4), Izabella Campos (Pair 5)
 
 ---
 
