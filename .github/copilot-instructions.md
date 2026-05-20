@@ -186,3 +186,8 @@ See [`TEAM-FLOW.md`](../TEAM-FLOW.md) for handoff diagrams and the daily timelin
 - [Infrastructure modules](../infra) — Terraform Azure modules (symlink, created by setup.sh)
 - [Specky SDD Plugin](https://github.com/paulasilvatech/specky) — Spec-Driven Development engine
 - Trilingual didactic docs: [`pt-br/`](../pt-br/) · [`es/`](../es/) · [`en/`](../en/)
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read `specs/001-generate-payment-cycle/plan.md`
+<!-- SPECKIT END -->
