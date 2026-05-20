@@ -113,3 +113,30 @@ jobs:
         run: |
           terraform init -backend=false
           terraform validate
+
+  security-scan:
+    name: Security scan (Trivy)
+    needs: [backend, frontend]
+    if: needs.backend.result == 'success' && needs.frontend.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner (repo)
+        uses: aquasecurity/trivy-action@0.35.0
+        continue-on-error: true
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: 1
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-results.sarif
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
