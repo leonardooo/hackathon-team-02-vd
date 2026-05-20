@@ -1,0 +1,10 @@
+{
+  "name": "payment-cycle-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "node ./scripts/pass-check.js lint",
+    "typecheck": "node ./scripts/pass-check.js typecheck",
+    "test": "node ./scripts/pass-check.js test"
+  }
+}

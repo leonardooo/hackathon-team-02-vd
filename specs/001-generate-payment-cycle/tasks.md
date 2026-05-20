@@ -12,9 +12,9 @@
 
 **Purpose**: Establish the feature slice locations for backend and frontend work.
 
-- [ ] T001 Create backend feature package markers in backend/src/main/java/com/datacorp/sifap/payments/cycle/package-info.java and backend/src/test/java/com/datacorp/sifap/payments/cycle/package-info.java
-- [ ] T002 [P] Create frontend feature route shell in frontend/app/(operator)/payment-cycles/page.tsx
-- [ ] T003 [P] Create frontend feature component scaffold in frontend/components/payment-cycles/payment-cycle-layout.tsx and frontend/lib/api/payment-cycles.ts
+- [X] T001 Create backend feature package markers in backend/src/main/java/com/datacorp/sifap/payments/cycle/package-info.java and backend/src/test/java/com/datacorp/sifap/payments/cycle/package-info.java
+- [X] T002 [P] Create frontend feature route shell in frontend/app/(operator)/payment-cycles/page.tsx
+- [X] T003 [P] Create frontend feature component scaffold in frontend/components/payment-cycles/payment-cycle-layout.tsx and frontend/lib/api/payment-cycles.ts
 
 ---
 
@@ -24,12 +24,12 @@
 
 **⚠️ CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T004 Create base cycle tables migration in backend/src/main/resources/db/migration/V001__create_payment_cycle_core_tables.sql
-- [ ] T005 [P] Create PaymentCycle aggregate and status enum in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycle.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycleStatus.java
-- [ ] T006 [P] Create PaymentCycleEntry, InclusionStatus, and GenerationAuditRecord in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycleEntry.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/InclusionStatus.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/GenerationAuditRecord.java
-- [ ] T007 [P] Create JPA repositories in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleRepository.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleEntryRepository.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/GenerationAuditRecordRepository.java
-- [ ] T008 Create shared backend DTOs in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/GeneratePaymentCycleCommand.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleSummaryDto.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/ErrorResponseDto.java
-- [ ] T009 Create feature controller skeleton in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
+- [X] T004 Create base cycle tables migration in backend/src/main/resources/db/migration/V001__create_payment_cycle_core_tables.sql
+- [X] T005 [P] Create PaymentCycle aggregate and status enum in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycle.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycleStatus.java
+- [X] T006 [P] Create PaymentCycleEntry, InclusionStatus, and GenerationAuditRecord in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/PaymentCycleEntry.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/InclusionStatus.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/GenerationAuditRecord.java
+- [X] T007 [P] Create JPA repositories in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleRepository.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleEntryRepository.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/GenerationAuditRecordRepository.java
+- [X] T008 Create shared backend DTOs in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/GeneratePaymentCycleCommand.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleSummaryDto.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/ErrorResponseDto.java
+- [X] T009 Create feature controller skeleton in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
 
 **Checkpoint**: Foundation ready for user story implementation.
 
@@ -43,15 +43,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [P] [US1] Create generation output ports in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/port/out/BeneficiaryEligibilityPort.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/port/out/PaymentRecordWriterPort.java
-- [ ] T011 [P] [US1] Implement eligibility and payment adapters in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/query/BeneficiaryEligibilityJpaAdapter.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentRecordJpaAdapter.java
-- [ ] T012 [US1] Implement generation domain rules in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/service/PaymentCycleGenerationDomainService.java
-- [ ] T013 [US1] Implement the generation use case in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
-- [ ] T014 [US1] Implement POST /api/v1/payment-cycles in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
-- [ ] T015 [P] [US1] Implement generation request client in frontend/lib/api/payment-cycles.ts
-- [ ] T016 [P] [US1] Implement operator generation form in frontend/components/payment-cycles/payment-cycle-generate-form.tsx
-- [ ] T017 [US1] Compose the generation page in frontend/app/(operator)/payment-cycles/page.tsx
-- [ ] T018 [US1] Validate the MVP generation flow in specs/001-generate-payment-cycle/quickstart.md
+- [X] T010 [P] [US1] Create generation output ports in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/port/out/BeneficiaryEligibilityPort.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/port/out/PaymentRecordWriterPort.java
+- [X] T011 [P] [US1] Implement eligibility and payment adapters in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/query/BeneficiaryEligibilityJpaAdapter.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentRecordJpaAdapter.java
+- [X] T012 [US1] Implement generation domain rules in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/service/PaymentCycleGenerationDomainService.java
+- [X] T013 [US1] Implement the generation use case in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
+- [X] T014 [US1] Implement POST /api/v1/payment-cycles in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
+- [X] T015 [P] [US1] Implement generation request client in frontend/lib/api/payment-cycles.ts
+- [X] T016 [P] [US1] Implement operator generation form in frontend/components/payment-cycles/payment-cycle-generate-form.tsx
+- [X] T017 [US1] Compose the generation page in frontend/app/(operator)/payment-cycles/page.tsx
+- [X] T018 [US1] Validate the MVP generation flow in specs/001-generate-payment-cycle/quickstart.md
 
 **Checkpoint**: User Story 1 is independently functional and demonstrable.
 
@@ -65,13 +65,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T019 [P] [US2] Create review DTOs in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleDetailDto.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleEntryDto.java
-- [ ] T020 [P] [US2] Implement review services in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/ListPaymentCyclesService.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GetPaymentCycleDetailService.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/ListPaymentCycleEntriesService.java
-- [ ] T021 [US2] Implement GET review endpoints in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
-- [ ] T022 [P] [US2] Implement cycle summary list component in frontend/components/payment-cycles/payment-cycle-summary-list.tsx
-- [ ] T023 [P] [US2] Implement entry review table in frontend/components/payment-cycles/payment-cycle-entry-table.tsx
-- [ ] T024 [US2] Extend the frontend API client for list and detail reads in frontend/lib/api/payment-cycles.ts
-- [ ] T025 [US2] Implement the cycle detail page in frontend/app/(operator)/payment-cycles/[cycleId]/page.tsx
+- [X] T019 [P] [US2] Create review DTOs in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleDetailDto.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/dto/PaymentCycleEntryDto.java
+- [X] T020 [P] [US2] Implement review services in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/ListPaymentCyclesService.java, backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GetPaymentCycleDetailService.java, and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/ListPaymentCycleEntriesService.java
+- [X] T021 [US2] Implement GET review endpoints in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
+- [X] T022 [P] [US2] Implement cycle summary list component in frontend/components/payment-cycles/payment-cycle-summary-list.tsx
+- [X] T023 [P] [US2] Implement entry review table in frontend/components/payment-cycles/payment-cycle-entry-table.tsx
+- [X] T024 [US2] Extend the frontend API client for list and detail reads in frontend/lib/api/payment-cycles.ts
+- [X] T025 [US2] Implement the cycle detail page in frontend/app/(operator)/payment-cycles/[cycleId]/page.tsx
 
 **Checkpoint**: User Story 2 is independently functional and demonstrates exclusion review on top of generated data.
 
@@ -85,13 +85,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T026 [US3] Add duplicate-cycle protection migration in backend/src/main/resources/db/migration/V002__enforce_unique_active_cycle_per_competence.sql
-- [ ] T027 [P] [US3] Implement duplicate lookup support in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleRepository.java
-- [ ] T028 [P] [US3] Extend audit event handling for blocked attempts in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/GenerationAuditRecord.java
-- [ ] T029 [US3] Enforce duplicate prevention in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
-- [ ] T030 [US3] Return HTTP 409 conflict responses in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
-- [ ] T031 [US3] Surface duplicate-generation feedback in frontend/components/payment-cycles/payment-cycle-generate-form.tsx
-- [ ] T032 [US3] Document the duplicate-prevention operator flow in specs/001-generate-payment-cycle/quickstart.md
+- [X] T026 [US3] Add duplicate-cycle protection migration in backend/src/main/resources/db/migration/V002__enforce_unique_active_cycle_per_competence.sql
+- [X] T027 [P] [US3] Implement duplicate lookup support in backend/src/main/java/com/datacorp/sifap/payments/cycle/infrastructure/persistence/PaymentCycleRepository.java
+- [X] T028 [P] [US3] Extend audit event handling for blocked attempts in backend/src/main/java/com/datacorp/sifap/payments/cycle/domain/model/GenerationAuditRecord.java
+- [X] T029 [US3] Enforce duplicate prevention in backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
+- [X] T030 [US3] Return HTTP 409 conflict responses in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java
+- [X] T031 [US3] Surface duplicate-generation feedback in frontend/components/payment-cycles/payment-cycle-generate-form.tsx
+- [X] T032 [US3] Document the duplicate-prevention operator flow in specs/001-generate-payment-cycle/quickstart.md
 
 **Checkpoint**: All three user stories are independently functional and reviewable.
 
@@ -101,9 +101,9 @@
 
 **Purpose**: Final hardening, documentation sync, and executable validation.
 
-- [ ] T033 [P] Synchronize API documentation in specs/001-generate-payment-cycle/contracts/payment-cycle-api.yaml
-- [ ] T034 Harden validation and masked logging in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
-- [ ] T035 Run the repository quality gate from scripts/check.sh
+- [X] T033 [P] Synchronize API documentation in specs/001-generate-payment-cycle/contracts/payment-cycle-api.yaml
+- [X] T034 Harden validation and masked logging in backend/src/main/java/com/datacorp/sifap/payments/cycle/interfaces/rest/PaymentCycleController.java and backend/src/main/java/com/datacorp/sifap/payments/cycle/application/service/GeneratePaymentCycleService.java
+- [X] T035 Run the repository quality gate from scripts/check.sh
 
 ---
 

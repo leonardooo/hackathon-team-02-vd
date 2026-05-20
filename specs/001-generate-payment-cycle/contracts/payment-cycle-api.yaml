@@ -35,6 +35,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server-side generation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     get:
       summary: List payment cycles, optionally filtered by competence
       operationId: listPaymentCycles
@@ -77,6 +83,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Unexpected server-side read error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /payment-cycles/{cycleId}/entries:
     get:
       summary: List cycle entries by inclusion outcome
@@ -102,6 +114,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PaymentCycleEntry'
+        '404':
+          description: Cycle not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     GeneratePaymentCycleRequest:
