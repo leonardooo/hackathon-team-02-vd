@@ -2,15 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop, "spec/**", "impl/**" ]
+    branches: [ main, develop, "spec/**", "impl/**", "devops/**" ]
   pull_request:
     branches: [ main, develop ]
 
-# Minimum permissions required for the workflow
+# Tier 1 hardening: permissões mínimas por padrão (elevadas por job quando necessário)
 permissions:
   contents: read
-  pull-requests: read
-  checks: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,6 +18,8 @@ jobs:
   detect-changes:
     name: Detect changed paths
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
@@ -41,11 +41,30 @@ jobs:
               - 'infra/**'
               - '**/*.tf'
 
+  # Tier 1: varredura de secrets em todo PR antes de qualquer build
+  secret-scan:
+    name: Secret scan (Gitleaks)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   backend:
     name: Backend (Java 21 + Spring Boot)
     needs: detect-changes
     if: needs.detect-changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      checks: write
     defaults:
       run:
         working-directory: backend
@@ -71,20 +90,25 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      checks: write
     defaults:
       run:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: pnpm
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Lint
@@ -92,13 +116,16 @@ jobs:
       - name: Type-check
         run: pnpm typecheck
       - name: Test
-        run: pnpm test --run --coverage
+        run: pnpm test
 
   infra:
     name: Infra (Terraform)
     needs: detect-changes
     if: needs.detect-changes.outputs.infra == 'true'
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: infra
@@ -113,3 +140,34 @@ jobs:
         run: |
           terraform init -backend=false
           terraform validate
+
+  # Tier 2: varredura de vulnerabilidades de dependências no backend
+  security-scan:
+    name: Security scan (OWASP + Trivy)
+    needs: [ backend, frontend ]
+    if: |
+      always() &&
+      (needs.backend.result == 'success' || needs.backend.result == 'skipped') &&
+      (needs.frontend.result == 'success' || needs.frontend.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner (repo)
+        uses: aquasecurity/trivy-action@v0.30.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-results.sarif
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
