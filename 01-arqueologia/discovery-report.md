@@ -2,9 +2,14 @@
 
 > Este documento consolida todas as descobertas do Estagio 1.
 
-**Time**: Team 02 VD
+**Time**: Team-02-VerdeDanadinho
 **Data**: 20/05/2026
-**Participantes**: Par 2 (Enterprise Architect + Software Architect) — contribuicao principal nos programas batch
+**Participantes**:
+- Par 1 (Visao): **Marcelo Mariz** — Product Owner + Requirements Engineer
+- Par 2 (Arquitetura): **Fabio Guerra** — Enterprise Architect + Software Architect
+- Par 3 (Implementacao): **Leonardo Assis** — Technical Lead + Developer
+- Par 4 (Qualidade): **Thaise Dantas** — DBA + QA Engineer
+- Par 5 (Operacoes): **Izabella Campos** — DevOps Engineer + Tech Writer
 
 ---
 

@@ -3,7 +3,7 @@
 > Mapeamento completo de dependencias entre os 15 programas Natural e 4 DDMs Adabas.
 > Objetivo: visualizar "quem chama quem" e "quem le/escreve o que".
 
-**Preenchido por:** Par 2 (Enterprise Architect + Software Architect) — Estagio 1 Arqueologia
+**Preenchido por:** Par 2 — Fabio Guerra (Enterprise Architect + Software Architect) — Team-02-VerdeDanadinho
 
 ---
 
