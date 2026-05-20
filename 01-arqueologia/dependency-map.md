@@ -10,24 +10,72 @@
 
 ```mermaid
 flowchart TD
- subgraph "Programas Online (Par 1 validado)"
- CADBENEF["CADBENEF.NSN<br/>Cadastro de Beneficiarios"]
- CADDEPEND["CADDEPEND.NSN<br/>Cadastro de Dependentes"]
- CADPROG["CADPROG.NSN<br/>Cadastro de Programas Sociais"]
+ subgraph "Pair 1 · Vision"
+ CADBENEF["CADBENEF.NSN"]
+ CADDEPEND["CADDEPEND.NSN"]
+ CADPROG["CADPROG.NSN"]
  end
 
- subgraph "DDMs Adabas"
- DDM_BENEF[("DDM: BENEFICIARIO (ARQ 150)")]
- DDM_PROG[("DDM: PROGRAMA-SOCIAL (ARQ 151)")]
+ subgraph "Pair 2 · Architecture"
+ BATCHPGT["BATCHPGT.NSN"]
+ BATCHREL["BATCHREL.NSN"]
+ BATCHCON["BATCHCON.NSN"]
+ end
+
+ subgraph "Pair 3 · Implementation"
+ CALCBENF["CALCBENF.NSN"]
+ CALCCORR["CALCCORR.NSN"]
+ CALCDSCT["CALCDSCT.NSN"]
+ end
+
+ subgraph "Pair 4 · Quality"
+ VALBENEF["VALBENEF.NSN"]
+ VALDOCS["VALDOCS.NSN"]
+ VALELEG["VALELEG.NSN"]
+ end
+
+ subgraph "Pair 5 · Operations"
+ CONSBENF["CONSBENF.NSN"]
+ RELPGT["RELPGT.NSN"]
+ RELAUDIT["RELAUDIT.NSN"]
+ end
+
+ subgraph "DDMs Adabas (4/4)"
+ DDM_BENEF[("BENEFICIARIO")]
+ DDM_PROG[("PROGRAMA-SOCIAL")]
+ DDM_PGTO[("PAGAMENTO")]
+ DDM_AUD[("AUDITORIA")]
  end
 
  CADBENEF -->|FIND/STORE/UPDATE| DDM_BENEF
  CADDEPEND -->|FIND/UPDATE (PE DEPENDENTES)| DDM_BENEF
  CADPROG -->|FIND/STORE| DDM_PROG
+
+ BATCHPGT -->|READ| DDM_BENEF
+ BATCHPGT -->|READ| DDM_PROG
+ BATCHPGT -->|READ/STORE| DDM_PGTO
+ BATCHREL -->|READ| DDM_PGTO
+ BATCHREL -->|FIND| DDM_BENEF
+ BATCHCON -->|READ/UPDATE| DDM_PGTO
+ BATCHCON -->|READ/STORE| DDM_AUD
+
+ CALCBENF -->|FIND| DDM_BENEF
+ CALCBENF -->|FIND| DDM_PROG
+ CALCBENF -->|STORE| DDM_PGTO
+ CALCCORR -->|READ/UPDATE| DDM_PGTO
+ CALCDSCT -->|FIND| DDM_BENEF
+ CALCDSCT -->|FIND/UPDATE| DDM_PGTO
+
+ VALELEG -->|FIND| DDM_BENEF
+ VALELEG -->|FIND| DDM_PROG
+ CONSBENF -->|FIND/READ| DDM_BENEF
+ CONSBENF -->|READ| DDM_PGTO
+ RELPGT -->|READ| DDM_PGTO
+ RELPGT -->|FIND| DDM_BENEF
+ RELAUDIT -->|READ| DDM_AUD
 ```
 
-> **Instrucao**: Este e apenas um exemplo inicial com 6 programas.
-> Seu time deve mapear **todos os 15 programas** e **4 DDMs**.
+> Consolidado com os **15 programas .NSN** e os **4 DDMs** existentes no repositório.
 
 ## Diagrama de Fluxo de Dados (DDMs)
 
@@ -45,8 +93,8 @@ flowchart LR
  subgraph "Armazenamento (Adabas)"
  DDM1[("BENEFICIARIO")]
  DDM2[("PROGRAMA-SOCIAL")]
- DDM3[("PAGAMENTO (pendente mapear)")]
- DDM4[("AUDITORIA (pendente mapear)")]
+ DDM3[("PAGAMENTO")]
+ DDM4[("AUDITORIA")]
  end
 
  UI --> PROG
@@ -57,36 +105,37 @@ flowchart LR
  PROG <--> DDM4
 ```
 
-> Substitua "DDM 3: ???" e "DDM 4: ???" pelos nomes reais encontrados.
-
 ## Tabela de Dependencias
 
 | Programa | Chama (CALLNAT) | Le (READ) DDMs | Escreve (STORE/UPDATE) DDMs | Observacoes |
 |----------|----------------|----------------|----------------------------|-------------|
-| CADBENEF.NSN | Nenhum CALLNAT externo (usa subrotina interna `VALIDA-CPF`) | BENEFICIARIO | BENEFICIARIO | Valida CPF (Mod-11), inclui/altera titular, aplica regra etaria (>75). |
-| CADDEPEND.NSN | Nenhum CALLNAT externo | BENEFICIARIO | BENEFICIARIO | Atualiza grupo periodico de dependentes e contador `NUM-DEPENDENTES`. |
-| CADPROG.NSN | Nenhum CALLNAT externo (usa subrotina interna `CONSULTA-PROG`) | PROGRAMA-SOCIAL | PROGRAMA-SOCIAL | Inclui/consulta programas e recalcula valor-base por fator K. |
-| BATCHPGT.NSN | A mapear pelo Par 2 | A mapear | A mapear | Pendente handoff cruzado. |
-| BATCHREL.NSN | A mapear pelo Par 2 | A mapear | A mapear | Pendente handoff cruzado. |
-| BATCHCON.NSN | A mapear pelo Par 2 | A mapear | A mapear | Pendente handoff cruzado. |
-| CALCBENF.NSN | A mapear pelo Par 3 | A mapear | A mapear | Pendente handoff cruzado. |
-| CALCCORR.NSN | A mapear pelo Par 3 | A mapear | A mapear | Pendente handoff cruzado. |
-| CALCDSCT.NSN | A mapear pelo Par 3 | A mapear | A mapear | Pendente handoff cruzado. |
-| VALBENEF.NSN | A mapear pelo Par 4 | A mapear | A mapear | Pendente handoff cruzado. |
-| VALDOCS.NSN | A mapear pelo Par 4 | A mapear | A mapear | Pendente handoff cruzado. |
-| VALELEG.NSN | A mapear pelo Par 4 | A mapear | A mapear | Pendente handoff cruzado. |
-| CONSBENF.NSN | A mapear pelo Par 5 | A mapear | A mapear | Pendente handoff cruzado. |
-| RELPGT.NSN | A mapear pelo Par 5 | A mapear | A mapear | Pendente handoff cruzado. |
-| RELAUDIT.NSN | A mapear pelo Par 5 | A mapear | A mapear | Pendente handoff cruzado. |
+| CADBENEF.NSN | Nenhum CALLNAT externo (subrotina interna `VALIDA-CPF`) | BENEFICIARIO | BENEFICIARIO | Inclusao/alteracao de beneficiario; valida CPF e status. |
+| CADDEPEND.NSN | Nenhum CALLNAT externo | BENEFICIARIO | BENEFICIARIO | Atualiza grupo PE de dependentes e contador total. |
+| CADPROG.NSN | Nenhum CALLNAT externo (subrotina interna `CONSULTA-PROG`) | PROGRAMA-SOCIAL | PROGRAMA-SOCIAL | Cadastro/consulta de programas sociais. |
+| BATCHPGT.NSN | Nenhum CALLNAT encontrado no fonte | BENEFICIARIO, PROGRAMA-SOCIAL, PAGAMENTO | PAGAMENTO | Batch mensal; comentario de cabecalho cita dependencia funcional de `CALCBENF` e `CALCDSCT`. |
+| BATCHREL.NSN | Nenhum CALLNAT externo | PAGAMENTO, BENEFICIARIO | - | Relatorio consolidado por regiao/status. |
+| BATCHCON.NSN | Nenhum CALLNAT externo | PAGAMENTO, AUDITORIA | PAGAMENTO, AUDITORIA | Concilia retorno CNAB e gera trilha de auditoria. |
+| CALCBENF.NSN | Nenhum CALLNAT externo | BENEFICIARIO, PROGRAMA-SOCIAL | PAGAMENTO | Calcula beneficio mensal e grava pagamento. |
+| CALCCORR.NSN | Nenhum CALLNAT externo | PAGAMENTO | PAGAMENTO | Recalculo retroativo por indice de correcao. |
+| CALCDSCT.NSN | Nenhum CALLNAT externo | PAGAMENTO, BENEFICIARIO | PAGAMENTO | Aplica descontos e ajusta valor liquido. |
+| VALBENEF.NSN | Nenhum CALLNAT externo | - | - | Rotina de validacao cadastral em memoria (sem FIND/STORE no fonte atual). |
+| VALDOCS.NSN | Nenhum CALLNAT externo | - | - | Rotina de validacao documental em memoria (sem acesso Adabas no fonte atual). |
+| VALELEG.NSN | Nenhum CALLNAT externo | BENEFICIARIO, PROGRAMA-SOCIAL | - | Valida elegibilidade por status/idade/renda/regra do programa. |
+| CONSBENF.NSN | Nenhum CALLNAT externo | BENEFICIARIO, PAGAMENTO | - | Consulta cadastral e historico de pagamentos. |
+| RELPGT.NSN | Nenhum CALLNAT externo | PAGAMENTO, BENEFICIARIO | - | Relatorio analitico de pagamentos por periodo. |
+| RELAUDIT.NSN | Nenhum CALLNAT externo | AUDITORIA | - | Relatorio de eventos de auditoria. |
 
 ## Dependencias Circulares
 
 > Liste aqui qualquer dependencia circular encontrada (programa A chama B que chama A):
 
-- Nenhuma dependencia circular identificada no recorte do Par 1.
+- Nao foi identificada dependencia circular por `CALLNAT` no codigo legado analisado.
+- Observacao: as dependencias sao predominantemente via dados compartilhados (DDMs), nao via chamada direta entre programas.
 
 ## Programas Orfaos
 
 > Programas que nao sao chamados por nenhum outro (possiveis pontos de entrada ou codigo morto):
 
-- Nenhum programa orfao identificado no recorte do Par 1; mapa completo depende consolidacao dos demais pares.
+- Como nao ha `CALLNAT` explicito entre os 15 programas, todos se comportam como pontos de entrada de menu, lote ou utilitarios.
+- Entrada online: CADBENEF, CADDEPEND, CADPROG, CONSBENF, VALBENEF, VALDOCS, VALELEG.
+- Entrada batch/relatorio: BATCHPGT, BATCHREL, BATCHCON, RELPGT, RELAUDIT, CALCBENF, CALCCORR, CALCDSCT.
