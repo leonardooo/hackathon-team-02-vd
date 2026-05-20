@@ -25,20 +25,20 @@ Marque [x] quando encontrar:
 - [x] **MYS-005** (★★★): BATCHPGT.NSN#L284-L285 usa TRUNCAMENTO (mult×100, int, div÷100) enquanto BATCHREL.NSN#L135-L139 usa ROUND (+0.005). Perda sistematica de centavos no truncamento.
 - [x] **MYS-006** (★★): BATCHPGT.NSN#L306-L312 — desconto simplificado de 3% flat (acima de R$500), ignora os 8 tipos de desconto do CALCDSCT (IR, judicial, consignacoes com cap 30%).
 - [x] **MYS-007** (★): CADDEPEND.NSN#L96-L101 — CPF de dependente = 0 passa na validacao de duplicidade (ignorado quando CPF=0). Permite dependentes sem identificador real.
-- [ ] **MYS-008** (★): Beneficiarios de uma regiao especifica pulam TODAS as verificacoes de elegibilidade. Qual regiao?
+- [x] **MYS-008** (★): VALELEG.NSN#L107-L111 — **Regiao 99 (Internacional/Diplomatico)** bypassa TODAS as verificacoes de elegibilidade. Adicionado 05/04/2013 por Anderson Lima. Sem registro em #MOTIVO (sem trilha auditavel).
 - [x] **MYS-009** (★★): BATCHPGT.NSN#L178-L192 — processamento ordenado por CPF ascendente (comentario de 1999: "SISTEMAS DOWNSTREAM DEPENDEM DESTA ORDENACAO"). Ordem nao e por programa/regiao mas por CPF.
 - [x] **MYS-010** (★★★): BATCHPGT.NSN#L340-L345 — alteracao de 2015 "INC AUDITORIA" mas NENHUM codigo de auditoria existe. Eventos de geracao de pagamento nao sao auditados. RELAUDIT so le o que BATCHCON grava.
 
 ## Easter Eggs (3)
 
-- [ ] **EGG-001** (★): Um bloco de codigo comentado referencia uma politica economica dos anos 90 que nunca foi removida. Qual politica?
-- [ ] **EGG-002** (★): Um programa tem uma funcao de validacao especial que aceita certos documentos sem verificacao. Parece um backdoor de teste. Onde?
+- [x] **EGG-001** (★): CALCCORR.NSN#L39-L50 — **Plano Verao** (01/1989-01/1991). Bloco comentado referencia transicao Cruzado→Cruzeiro com multiplicador 2.75x (sub-periodo pre-07/1989: 1.4289x). Marcado "NAO REMOVER (HISTORICO)". Responsavel Joao Batista, 15/03/2003.
+- [x] **EGG-002** (★): VALDOCS.NSN#L166-L182 — Subrotina **CHECK-DOC-ESPECIAL** aceita 8 prefixos CPF especiais (000,001,002,010,011,099,100,999) e apaga TODOS erros de validacao. Comentario "GOVERNO/TESTE". Alteracao 2011 Roberto Mendes "AJUSTE CHECK ESPEC".
 - [x] **EGG-003** (★): BATCHCON.NSN#L200-L230 — bloco comentado do **Banco Real** (codigo 356), absorvido pelo Santander em 2007. Dead code desde 2005.
 
 ## Inconsistencias entre Documentacao e Codigo (bonus)
 
 - [x] **INC-001**: Limite de dependentes: DDM permite 10 (PE), codigo limita a 5 (CADDEPEND#L63-L66)
-- [ ] **INC-002**: O documento de arquitetura original nao menciona uma estrutura de dados que foi adicionada depois
+- [x] **INC-002**: DDM AUDITORIA (FNR 153) nao mencionado no manual tecnico 2008. Adicionado depois com campos IP, email, hash. IN-TCU 63/2010 citada como base legal
 - [x] **INC-003**: Formula de 4 fatores (BATCHPGT#L279-L281), constante 0.347215 (CADPROG#L87), 13o simplificado — nenhum em documentacao
 - [x] **INC-004**: BATCHPGT trunca valores monetarios; BATCHREL arredonda (+0.005) — mesmo VLR-BRUTO, metodos diferentes
 

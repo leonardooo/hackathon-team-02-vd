@@ -64,6 +64,69 @@
 | 48 | SENARC | Secretaria Nacional de Renda de Cidadania | legacy/legacy-docs/ | Secretaria que opera o SIFAP no dia a dia. |
 | 49 | FNR | File Number (Adabas) | legacy/adabas-ddms/ | Numero do arquivo fisico Adabas (150=BENEF, 151=PROG, 152=PGTO, 153=AUDIT). |
 | 50 | SIAFI | Sistema Integrado de Administracao Financeira | legacy/natural-programs/BATCHCON.NSN | Sistema do Tesouro Nacional. Integracao via FTP manual. |
+| 51 | COMPETENCIA | Periodo de referencia AAAAMM | legacy/natural-programs/CALCBENF.NSN | Chave para identificar mes/ano do pagamento |
+| 52 | FATOR-REG | Fator de Ajuste Regional | legacy/natural-programs/CALCBENF.NSN | Multiplicador 1.0-1.4 por regiao geografica |
+| 53 | FATOR-FAM | Fator Familiar | legacy/natural-programs/CALCBENF.NSN | Aumenta 1.0 a 1.2 conforme dependentes |
+| 54 | FATOR-RND | Fator de Renda | legacy/natural-programs/CALCBENF.NSN | Reduz beneficio: 1.0→0.40 conforme renda |
+| 55 | FATOR-IDADE | Fator Etario | legacy/natural-programs/CALCBENF.NSN | Multiplicador 1.0-1.15 por faixa de idade |
+| 56 | VLR-BENF | Valor do Beneficio Mensal | legacy/natural-programs/CALCBENF.NSN | Resultado formula: BASE × 4 fatores |
+| 57 | VLR-ABONO | Valor do Abono Natalino | legacy/natural-programs/CALCBENF.NSN | +15% em dezembro para tipo A |
+| 58 | VLR-13 | Valor do 13o Salario | legacy/natural-programs/CALCBENF.NSN | BASE × FATOR_REG × FATOR_IDADE (sem renda/dependentes) |
+| 59 | TIPO-PROG | Tipo de Programa Social | legacy/natural-programs/CALCBENF.NSN | 'A'=Assistencial (com abono); outros sem |
+| 60 | DT-CORRECAO | Data da Correcao Retroativa | legacy/natural-programs/CALCCORR.NSN | Preenchida quando VLR_CORRECAO calculado |
+| 61 | VLR-CORRECAO | Valor da Correcao Retroativa | legacy/natural-programs/CALCCORR.NSN | Diferenca acumulada por IPCA |
+| 62 | IND-CORRIGIDO | Indicador de Correcao Aplicada | legacy/natural-programs/CALCCORR.NSN | 'S'=ja corrigido (idempotencia) |
+| 63 | IPCA | Indice Nacional Precos Consumidor Amplo | legacy/natural-programs/CALCCORR.NSN | Inflacao oficial usada para correcao |
+| 64 | IND-ACUM | Indice Acumulado | legacy/natural-programs/CALCCORR.NSN | Produto dos (1 + IPCA_MES) para periodo |
+| 65 | COMP-INI / COMP-FIM | Competencia Inicial/Final | legacy/natural-programs/CALCCORR.NSN | Periodo processamento correcoes |
+| 66 | PLANO-VERAO | Correcao Plano Verao 1989-1991 (comentado) | legacy/natural-programs/CALCCORR.NSN | Moeda Cruzado→Cruzeiro; multiplicador 2.75x; EGG-001 |
+| 67 | VLR-DESCONTO | Valor Total de Descontos | legacy/natural-programs/CALCDSCT.NSN | Soma de todos os descontos aplicados |
+| 68 | TIPO-DSCT | Tipo de Desconto | legacy/natural-programs/CALCDSCT.NSN | J=Judicial, P=Pensao, I=Imposto, S=Sindical, C=Contrib, A=Admin |
+| 69 | PCT-DSCT | Percentual de Desconto | legacy/natural-programs/CALCDSCT.NSN | Se VLR-DSCT=0, usar percentual sobre bruto |
+| 70 | VLR-DSCT | Valor Fixo de Desconto | legacy/natural-programs/CALCDSCT.NSN | Se > 0, prioridade sobre PCT-DSCT |
+| 71 | DT-INICIO-DSCT / DT-FIM-DSCT | Vigencia do Desconto | legacy/natural-programs/CALCDSCT.NSN | DT-FIM=0 → sem limite |
+| 72 | NUM-PROCESSO | Numero do Processo Judicial | legacy/natural-programs/CALCDSCT.NSN | Identifica ordem judicial de desconto |
+| 73 | VLR-MAX-DSCT | Teto Maximo de Desconto | legacy/natural-programs/CALCDSCT.NSN | 30% bruto (exceto judicial) |
+| 74 | #RESULTADO | Flag resultado V=Valido / I=Invalido | legacy/natural-programs/VALBENEF.NSN | Retorno principal da validacao cadastral |
+| 75 | #TODOS-IGUAIS | Flag CPF com todos digitos iguais | legacy/natural-programs/VALBENEF.NSN | CPFs como 111...1 sao invalidos |
+| 76 | #DV1 / #DV2 | Digitos verificadores calculados | legacy/natural-programs/VALBENEF.NSN | Comparados com posicoes 10 e 11 do CPF |
+| 77 | #DIAS-MES | Tabela dias por mes (array 1-12) | legacy/natural-programs/VALBENEF.NSN | Feb=29 fixo (sem check bissexto) |
+| 78 | RG | Registro Geral (carteira identidade) | legacy/natural-programs/VALDOCS.NSN | Obrigatorio, minimo 5 caracteres |
+| 79 | TITULO | Titulo de Eleitor | legacy/natural-programs/VALDOCS.NSN | Capturado mas nunca validado (morto) |
+| 80 | CTPS | Carteira de Trabalho e Previdencia Social | legacy/natural-programs/VALDOCS.NSN | Capturado mas nunca validado (morto) |
+| 81 | #PREF-ESP | Prefixos Especiais CPF (governo/teste) | legacy/natural-programs/VALDOCS.NSN | 8 prefixos: 000,001,002,010,011,099,100,999 |
+| 82 | CHECK-DOC-ESPECIAL | Subrotina verificacao doc especial | legacy/natural-programs/VALDOCS.NSN | Backdoor que limpa erros para prefixos especiais |
+| 83 | #ELEGIVEL | Flag de elegibilidade | legacy/natural-programs/VALELEG.NSN | TRUE=elegivel, FALSE=nao elegivel |
+| 84 | REGIAO 99 | Regiao especial Internacional/Diplomatico | legacy/natural-programs/VALELEG.NSN | Bypassa todas verificacoes. Adicionada 2013 |
+| 85 | TIPO A | Programa Assistencial | legacy/natural-programs/VALELEG.NSN | Exige renda baixa e documentacao completa |
+| 86 | TIPO P | Programa Previdenciario | legacy/natural-programs/VALELEG.NSN | Exige idade minima 60 (hardcoded) |
+| 87 | TIPO T | Programa de Trabalho | legacy/natural-programs/VALELEG.NSN | Exige idade 16-65 (hardcoded) |
+| 88 | DOCUMENTOS-OK | Flag documentacao completa S/N | legacy/natural-programs/VALELEG.NSN | Usado tipo A. Nunca setado por VALDOCS |
+| 89 | COD-ELEGIBILIDADE | Codigo elegibilidade especifica A5 | legacy/natural-programs/VALELEG.NSN | 1o char R=exige NIS, 2o char D=exige dependentes |
+| 90 | #MOTIVO | Array motivos inelegibilidade (10) | legacy/natural-programs/VALELEG.NSN | Acumulador razoes de rejeicao |
+| 91 | CONSBENF | Consulta Beneficiario | legacy/natural-programs/CONSBENF.NSN | Programa online 3270 consulta cadastral |
+| 92 | #TIPO-BUSCA | Tipo busca (C=CPF, N=NIS) | legacy/natural-programs/CONSBENF.NSN | Seletor modo de busca |
+| 93 | #CPF-MASK | CPF mascarado para exibicao | legacy/natural-programs/CONSBENF.NSN | Formato ***.***.XXX-XX |
+| 94 | #STATUS-DESC | Descricao status do beneficiario | legacy/natural-programs/CONSBENF.NSN | Traducao codigo 1 char → texto |
+| 95 | RELPGT | Relatorio de Pagamentos | legacy/natural-programs/RELPGT.NSN | Relatorio analitico com totalizadores |
+| 96 | #COMP-INI / #COMP-FIM | Competencia inicial/final (filtro RELPGT) | legacy/natural-programs/RELPGT.NSN | Periodo do relatorio AAAAMM |
+| 97 | #COD-PROG-FILTRO | Codigo programa filtro (0=todos) | legacy/natural-programs/RELPGT.NSN | Zero como wildcard |
+| 98 | #MAX-LINHAS | Maximo linhas por pagina | legacy/natural-programs/RELPGT.NSN | Hardcoded 66 — padrao mainframe |
+| 99 | #PROG-ANT | Programa anterior (controle quebra) | legacy/natural-programs/RELPGT.NSN | Detecta mudanca de programa |
+| 100 | TIPO-PGTO 'T' | Tipo pagamento TERCEIRO | legacy/natural-programs/RELPGT.NSN | Mapeado mas nao gerado — origem desconhecida |
+| 101 | RELAUDIT | Relatorio de Auditoria | legacy/natural-programs/RELAUDIT.NSN | Trilha auditoria com filtros e resumo |
+| 102 | #TIPO-SAIDA | Tipo saida (T=Tela, I=Impressora) | legacy/natural-programs/RELAUDIT.NSN | Seletor destino relatorio |
+| 103 | #ACAO-FILTRO | Filtro acao auditoria | legacy/natural-programs/RELAUDIT.NSN | Filtra por codigo acao (2 chars) |
+| 104 | #USUARIO-FILTRO | Filtro usuario auditoria | legacy/natural-programs/RELAUDIT.NSN | Filtra por login operador |
+| 105 | ACAO 'EX' | Acao Exclusao (sempre oculta) | legacy/natural-programs/RELAUDIT.NSN | Filtrada incondicionalmente — so via SYSAOS |
+| 106 | ACAO 'CN' | Acao Consulta (extensao) | legacy/natural-programs/RELAUDIT.NSN | Nao definido no DDM |
+| 107 | ACAO 'DV' | Acao Divergencia (extensao) | legacy/natural-programs/RELAUDIT.NSN | Divergencias conciliacao — nao no DDM |
+| 108 | SYSAOS | System Adabas Online Services | legacy/adabas-ddms/AUDITORIA.ddm | Interface direta Adabas — unico modo ver exclusoes |
+| 109 | IN-TCU 63/2010 | Instrucao Normativa TCU 63/2010 | legacy/adabas-ddms/AUDITORIA.ddm | Obrigatoriedade legal trilha auditoria |
+| 110 | PORT. 213/2010 | Portaria CGTI 213/2010 | legacy/adabas-ddms/AUDITORIA.ddm | Decisao parar gravar acoes CO (consulta) |
+| 111 | #QTD-FILTRADOS | Quantidade registros filtrados | legacy/natural-programs/RELAUDIT.NSN | Conta total registros omitidos |
+| 112 | RENDA-MAX | Teto renda familiar do programa | legacy/natural-programs/VALELEG.NSN | Se >0, renda familiar nao pode exceder |
+| 113 | NIS | Numero Identificacao Social (VALELEG) | legacy/natural-programs/VALELEG.NSN | Mapeamento DDM incerto (NUM-INSCRICAO?) |
 
 > Adicione mais linhas conforme necessario. Nao se limite a 30!
 

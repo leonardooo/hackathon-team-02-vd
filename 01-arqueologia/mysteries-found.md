@@ -50,6 +50,42 @@
 | MYS-023 | Status 'C' (Cancelado) aparece na tabela do BATCHREL mas nenhum programa faz transicao para 'C'. | legacy/natural-programs/BATCHREL.NSN#L82-L86 | Quem seta STATUS='C'? Possivelmente operacao manual nunca implementada. | MEDIA |
 | MYS-024 | BATCHPGT faz END TRANSACTION a cada STORE — ~4.2M commits individuais sem controle de batch/chunk. | legacy/natural-programs/BATCHPGT.NSN#L335-L340 | Performance e risco de inconsistencia — crash no meio deixa processamento parcial. | ALTA |
 | MYS-025 | Calculo de idade usa apenas ano (ignora mes/dia) — pode errar ±1 ano na virada de aniversario. | legacy/natural-programs/BATCHPGT.NSN#L236-L237 | Beneficiarios nascidos no segundo semestre podem ter fator idade incorreto. | MEDIA |
+| MYS-026 | 13o salario (CALCBENF) NAO aplica fator de renda e dependentes. Reduz valor 30-40% vs mes normal. Intencional ou bug? | legacy/natural-programs/CALCBENF.NSN#L215-L221 | Beneficiarios recebem 13o ~30-40% menor que pagamento regular. | MEDIA |
+| MYS-027 | Abono natalino 15% apenas para programa tipo 'A'. Criterio nao documentado. | legacy/natural-programs/CALCBENF.NSN#L224-L230 | Apenas subset de beneficiarios ganha bonus natalino. | MEDIA |
+| MYS-028 | Tabela IPCA (CALCCORR) carregada apenas ate 2012 com nota "ULTIMA CARGA: 2014". Correcoes 2013+ usam indices obsoletos ou falham. | legacy/natural-programs/CALCCORR.NSN#L38-L80 | **CRITICO** — 13 anos de correcoes potencialmente incorretas. | ALTA |
+| MYS-029 | **EGG-001 — PLANO VERAO**: Bloco comentado referencia transicao Cruzado→Cruzeiro (1989-1991) com multiplicador 2.75x. Marcado "NAO REMOVER (HISTORICO)". | legacy/natural-programs/CALCCORR.NSN#L39-L50 | Codigo morto de 2003 ainda presente em 2026. Politica economica anos 90. | ALTA |
+| MYS-030 | Desconto CALCBENF simplificado (3% >500) vs CALCDSCT completo (4 aliquotas: 3/5/7/9%). Qual modulo e chamado? Duplicacao. | legacy/natural-programs/CALCBENF.NSN#L238-L244 vs CALCDSCT.NSN#L43-L49 | Logica de desconto divergente entre programas. | MEDIA |
+| MYS-031 | #FATOR-REAJ no CALCBENF multiplicado na formula final mas origem/setup nao aparece no codigo. Reajustes silenciosos. | legacy/natural-programs/CALCBENF.NSN#L191-L201 | Reajustes aplicados sem auditoria. | MEDIA |
+| MYS-032 | Regiao 99 ("ESPEC") no CALCBENF com fator 1.0 mas nunca e setada em beneficiarios (antes da descoberta em VALELEG). | legacy/natural-programs/CALCBENF.NSN#L103 | Possivel codigo morto para regiao especial. | MEDIA |
+| MYS-033 | C*DESCONTOS (CALCDSCT): sintaxe Natural para count de ocorrencias PE. Confirmacao necessaria. | legacy/natural-programs/CALCDSCT.NSN#L109 | Sintaxe legada pode nao ser obvia na modernizacao. | MEDIA |
+| MYS-034 | VLR-DSCT (fixo) vs PCT-DSCT (percentual) podem ambos estar preenchidos. Codigo prioriza VLR-DSCT sem doc. | legacy/natural-programs/CALCDSCT.NSN#L124-L153 | Comportamento implicito, risco de sobre-desconto. | MEDIA |
+| MYS-035 | Desconto judicial "NAO TEM TETO" enquanto outros tem 30%. Pode gerar liquido negativo sem protecao. | legacy/natural-programs/CALCDSCT.NSN#L119-L130 | **CRITICO** — risco legal e financeiro sem salvaguarda. | ALTA |
+| MYS-036 | **EGG-002 — BACKDOOR TESTE**: CHECK-DOC-ESPECIAL em VALDOCS apaga TODOS erros para 8 prefixos CPF (000,001,002,010,011,099,100,999). Comentario "GOVERNO/TESTE" — nunca removido. | legacy/natural-programs/VALDOCS.NSN#L166-L182 | **CRITICO** — permite documentos invalidos passarem. Risco de fraude. | ALTA |
+| MYS-037 | **DOCUMENTOS-OK nunca e setado**: VALDOCS declara campo na VIEW mas nunca grava. VALELEG depende de DOCUMENTOS-OK='S' para tipo A. | legacy/natural-programs/VALDOCS.NSN#L18; VALELEG.NSN#L178 | **CRITICO** — programas assistenciais podem ser rejeitados sistematicamente. | ALTA |
+| MYS-038 | Fevereiro sempre aceita dia 29 sem verificar ano bissexto. #DIAS-MES(2)=29 fixo. | legacy/natural-programs/VALBENEF.NSN#L96 | Aceita 29/02 em anos nao-bissextos (ex: 29/02/2023). | ALTA |
+| MYS-039 | CPFs com todos digitos iguais NAO rejeitados no VALDOCS (mas sim no VALBENEF). Inconsistencia entre validadores. | legacy/natural-programs/VALDOCS.NSN#L100-L143 vs VALBENEF.NSN#L187-L203 | Dois programas com regras diferentes para mesmo campo. | ALTA |
+| MYS-040 | ARQ 155 nos comentarios de VALELEG vs FNR 151 no DDM PROGRAMA-SOCIAL. Comentario desatualizado? | legacy/natural-programs/VALELEG.NSN#L10-L86 | Se ARQ 155 diferente existe, VIEW pode ler dados errados. | MEDIA |
+| MYS-041 | COD-PROGRAMA tipo N4 no programa vs A4 no DDM. Reforça MYS-007. | legacy/natural-programs/VALELEG.NSN#L19-L28 | Conversao implicita Adabas pode mascarar problemas. | ALTA |
+| MYS-042 | COD-REGIAO tipo N2 no programa vs A2 no DDM. Regiao "99" funciona como numerico. | legacy/natural-programs/VALELEG.NSN#L22 | Texto como "AA" seria incompativel. | MEDIA |
+| MYS-043 | Conflito regras idade hardcoded vs parametrizadas: tipo P exige >=60, tipo T exige 16-65, mas IDADE-MIN/MAX do programa ja verifica. | legacy/natural-programs/VALELEG.NSN#L139-L196 | Parametrizacao parcialmente ignorada por hardcode. | MEDIA |
+| MYS-044 | Variaveis #NOME-TEMP e #CHAR declaradas no VALBENEF mas nunca usadas. Refactoring incompleto de 2010. | legacy/natural-programs/VALBENEF.NSN#L56-L59 | Dead variables. | ALTA |
+| MYS-045 | TITULO ELEITOR e CTPS capturados no INPUT de VALDOCS e descartados. Codigo morto desde 1998. | legacy/natural-programs/VALDOCS.NSN#L22-L63 | Operador preenche campos desnecessariamente ha 26+ anos. | ALTA |
+| MYS-046 | NIS declarado na VIEW de VALELEG mas nao existe no DDM com esse nome. Possivel mapeamento para NUM-INSCRICAO. | legacy/natural-programs/VALELEG.NSN#L24-L228 | Se mapeamento errado, verificacao NIS le campo errado. | MEDIA |
+| MYS-047 | NOME e UF declarados na VIEW de VALDOCS mas nunca acessados. Campos fantasma — overhead I/O. | legacy/natural-programs/VALDOCS.NSN#L15-L17 | Overhead desnecessario. | ALTA |
+| MYS-048 | R$600 hardcoded como limiar renda para programas assistenciais. Sem parametrizacao. | legacy/natural-programs/VALELEG.NSN#L171 | Valor magico financeiro afeta elegibilidade de milhoes. | ALTA |
+| MYS-049 | Regiao 99 bypassada SEM registrar motivo (#MOTIVO). ESCAPE ROUTINE direto. Sem trilha auditavel. | legacy/natural-programs/VALELEG.NSN#L107-L111 | Elegibilidade concedida sem rastro. | ALTA |
+| MYS-050 | Acesso a campos fora do bloco FIND (apos END-FIND). Natural retém ultimo valor. | legacy/natural-programs/VALELEG.NSN#L99-L157 | Se COD-PROGRAMA nao for unico, comportamento indefinido. | BAIXA |
+| MYS-051 | #MSG (A78) declarada em VALELEG mas nunca usada. Dead variable. | legacy/natural-programs/VALELEG.NSN#L56 | Planejada para mensagem consolidada, substituida por #MOTIVO. | ALTA |
+| MYS-052 | **Bug mascara CPF CONHECIDO**: CPF < 10^10 mostra primeiros 3 digitos em vez dos ultimos. Comentario: "NAO CORRIGIR SEM APROVACAO DA AUDITORIA". | legacy/natural-programs/CONSBENF.NSN#L149-L168 | **CRITICO** — exposicao de dados sensiveis. Aprovacao nunca veio. | ALTA |
+| MYS-053 | Tipo pagamento 'T' (TERCEIRO) no RELPGT sem origem conhecida. BATCHPGT gera apenas 'N' e 'D'. | legacy/natural-programs/RELPGT.NSN#L108-L110 | Dead code ou entrada de sistema externo. | MEDIA |
+| MYS-054 | Mascara CPF inconsistente: CONSBENF oculta 6 primeiros, RELPGT oculta 3 primeiros. Politicas divergentes. | legacy/natural-programs/CONSBENF.NSN#L154-L168 vs RELPGT.NSN#L99-L102 | Sem politica uniforme de mascaramento. | ALTA |
+| MYS-055 | Lookup N+1 no RELPGT: FIND beneficiario para CADA pagamento. 100k pgtos = 100k FINDs extras. | legacy/natural-programs/RELPGT.NSN#L91-L96 | Performance degradada. Falhas silenciosas. | ALTA |
+| MYS-056 | **Codigo acao 'CO' com DUPLO SIGNIFICADO**: DDM diz CO=CONSULTA, RELAUDIT/BATCHCON usam CO=CONCILIACAO. | legacy/natural-programs/RELAUDIT.NSN#L132-L133 vs AUDITORIA.ddm | **CRITICO** — colisao de namespace. Auditoria confunde conciliacoes/consultas. | ALTA |
+| MYS-057 | Codigos 'CN' e 'DV' nao definidos no DDM AUDITORIA. Extensoes nao documentadas. | legacy/natural-programs/RELAUDIT.NSN#L136-L141 | Codigos de acao nao registrados na definicao formal. | MEDIA |
+| MYS-058 | **Exclusoes INVISIVEIS na trilha de auditoria.** RELAUDIT filtra 'EX' incondicionalmente. Unico acesso via SYSAOS. | legacy/natural-programs/RELAUDIT.NSN#L97-L100 + AUDITORIA.ddm#L89-L91 | **CRITICO** — lacuna compliance. Possivel violacao IN-TCU 63/2010. | ALTA |
+| MYS-059 | SEQ-AUDIT declarado N10 no VIEW vs N15 no DDM. Truncamento em IDs > 9.999.999.999. | legacy/natural-programs/RELAUDIT.NSN#L14 vs AUDITORIA.ddm#L22 | Relatorio pode truncar IDs de auditoria futuramente. | MEDIA |
+| MYS-060 | VLR-ABONO acumulado globalmente no RELPGT mas NUNCA impresso por linha. Impossivel auditar quais pagamentos tiveram abono. | legacy/natural-programs/RELPGT.NSN#L29-L161 | Rastreabilidade prejudicada. Adicionado 2010. | ALTA |
+| MYS-061 | Consulta CONSBENF sem controle de acesso. Qualquer operador ve TODOS os dados sensiveis (renda, endereco, NIS, CPF). | legacy/natural-programs/CONSBENF.NSN#L112-L125 | Exposicao dados sensiveis sem auditoria da consulta. | MEDIA |
 
 ## Detalhamento dos Misterios
 
@@ -101,19 +137,70 @@
 - **Hipotese do time**: programador usou atalho numerico; Adabas pode converter implicitamente.
 - **Risco se ignorarmos**: migracao para PostgreSQL com tipo VARCHAR pode gerar '1' em vez de '001'.
 
+### MYS-029: EGG-001 — Plano Verao (CALCCORR)
+
+- **Arquivo**: `legacy/natural-programs/CALCCORR.NSN#L39-L50`
+- **O que esperavamos**: codigo ativo ou removido.
+- **O que o codigo faz**: bloco comentado referencia transicao Cruzado→Cruzeiro (1989-1991) com multiplicador 2.75x. Sub-periodo pre-07/1989 com 1.4289x.
+- **Detalhes**: Responsavel Joao Batista (15/03/2003). Marcado "NAO REMOVER (HISTORICO)". Indicador 'V' era setado em IND-CORRIGIDO.
+- **Conclusao**: **EGG-001 ENCONTRADO** — politica economica dos anos 90 = Plano Verao.
+
+### MYS-036: EGG-002 — Backdoor VALDOCS (CHECK-DOC-ESPECIAL)
+
+- **Arquivo**: `legacy/natural-programs/VALDOCS.NSN#L166-L182`
+- **O que esperavamos**: validacao completa de documentos.
+- **O que o codigo faz**: subrotina CHECK-DOC-ESPECIAL aceita 8 prefixos CPF (000,001,002,010,011,099,100,999) e apaga TODOS erros, forcando resultado VALIDO.
+- **Detalhes**: Comentario "GOVERNO/TESTE". Alteracao 2011 Roberto Mendes "AJUSTE CHECK ESPEC" — backdoor mantido conscientemente.
+- **Conclusao**: **EGG-002 ENCONTRADO** — backdoor de teste nunca removido.
+
+### MYS-037: DOCUMENTOS-OK nunca setado
+
+- **Arquivo**: `legacy/natural-programs/VALDOCS.NSN#L18` + `VALELEG.NSN#L178`
+- **O que esperavamos**: VALDOCS setar DOCUMENTOS-OK='S' apos validacao.
+- **O que o codigo faz**: campo declarado na VIEW mas nunca atualizado. VALELEG depende dele para tipo A.
+- **Risco se ignorarmos**: programas assistenciais podem rejeitar beneficiarios sistematicamente.
+
+### MYS-052: Bug mascara CPF conhecido (CONSBENF)
+
+- **Arquivo**: `legacy/natural-programs/CONSBENF.NSN#L149-L168`
+- **O que esperavamos**: mascara uniforme ocultando dados sensiveis.
+- **O que o codigo faz**: CPFs com menos de 11 digitos (zeros a esquerda) mostram primeiros 3 digitos em vez dos ultimos.
+- **Detalhes**: Comentario explicito "INCONSISTENCIA CONHECIDA — NAO CORRIGIR SEM APROVACAO DA AUDITORIA". Existe desde 2003.
+- **Risco se ignorarmos**: vazamento de dados sensiveis CPF.
+
+### MYS-056: Colisao semantica codigo 'CO' (RELAUDIT vs DDM)
+
+- **Arquivo**: `legacy/natural-programs/RELAUDIT.NSN#L132-L133` vs `legacy/adabas-ddms/AUDITORIA.ddm`
+- **O que esperavamos**: significado unico por codigo.
+- **O que o codigo faz**: DDM define CO=CONSULTA, RELAUDIT e BATCHCON usam CO=CONCILIACAO.
+- **Detalhes**: DDM nota que acoes CO (consulta) nao gravadas desde 2010. Registros CO pos-2010 sao conciliacoes.
+- **Risco se ignorarmos**: analise de auditoria conta conciliacoes como consultas ou vice-versa.
+
+### MYS-058: Exclusoes invisiveis na auditoria (RELAUDIT)
+
+- **Arquivo**: `legacy/natural-programs/RELAUDIT.NSN#L97-L100` + `legacy/adabas-ddms/AUDITORIA.ddm#L89-L91`
+- **O que esperavamos**: trilha de auditoria completa.
+- **O que o codigo faz**: filtra TODAS acoes 'EX' (exclusao) ANTES dos outros filtros. Unico acesso via SYSAOS (Adabas Online).
+- **Detalhes**: DDM confirma deliberacao. Nao ha outro relatorio que exiba exclusoes.
+- **Risco se ignorarmos**: lacuna de compliance. Possivel violacao IN-TCU 63/2010.
+
 ## Easter Eggs
 
-> Dica: existem **3 easter eggs** escondidos no codigo legado. Registre aqui os que encontrar:
+> Existem **3 easter eggs** escondidos no codigo legado:
 
-1. [x] Easter Egg 1: busca realizada nos 3 programas do Par 1; nao identificado ate o momento.
-2. [x] Easter Egg 2: busca realizada por comentarios e blocos inativos; sem evidencias conclusivas.
-3. [ ] Easter Egg 3: pendente de validacao cruzada com programas de outros pares.
+1. [x] **EGG-001: Plano Verao** — `legacy/natural-programs/CALCCORR.NSN#L39-L50`. Bloco comentado referencia politica economica Plano Verao (1989-1991), transicao moeda Cruzado→Cruzeiro com multiplicador 2.75x. Marcado "NAO REMOVER (HISTORICO)". Responsavel Joao Batista, 15/03/2003.
+2. [x] **EGG-002: Backdoor VALDOCS** — `legacy/natural-programs/VALDOCS.NSN#L166-L182`. Subrotina CHECK-DOC-ESPECIAL aceita 8 prefixos CPF especiais e apaga todos erros de validacao. Comentario "GOVERNO/TESTE". Nunca removido — mantido conscientemente desde alteracao 2011.
+3. [x] **EGG-003: Banco Real** — `legacy/natural-programs/BATCHCON.NSN#L200-L230`. Bloco comentado do Banco Real (codigo 356), absorvido pelo Santander em 2007. Dead code desde 2005.
 
 ## Resumo
 
-- Total de misterios encontrados: 25 (Par 1: 10, Par 2: 15)
-- Confianca alta: 15
-- Confianca media: 9
-- Confianca baixa: 1
-- Easter eggs encontrados: 0 / 3
-- Misterio mais critico: **MYS-011** (cabecalho BATCHPGT mente sobre CALLNAT — divergencia de calculo)
+- Total de misterios encontrados: **61** (Par 1: 10, Par 2: 15, Par 3: 10, Par 4: 16, Par 5: 10)
+- Confianca alta: 39
+- Confianca media: 20
+- Confianca baixa: 2
+- Easter eggs encontrados: **3 / 3**
+- Misterios mais criticos:
+  - **MYS-011** — cabecalho BATCHPGT mente sobre CALLNAT
+  - **MYS-028** — tabela IPCA congelada desde 2014
+  - **MYS-036** — backdoor de teste em producao (EGG-002)
+  - **MYS-058** — exclusoes invisiveis na auditoria

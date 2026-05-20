@@ -70,6 +70,94 @@
 | BR-CON-08 | COD_RET '02' → status 'E' (Estornado); nao grava data pagamento | legacy/natural-programs/BATCHCON.NSN#L188-L194 | PAGAMENTO.STATUS-PGTO, COD-RETORNO | CRITICO | Transicao G→E |
 | BR-CON-09 | Codigo de retorno desconhecido: logado mas nenhuma transicao de status | legacy/natural-programs/BATCHCON.NSN#L195-L199 | PAGAMENTO.COD-RETORNO | ALTO | Clausula NONE — status permanece inalterado |
 | BR-CON-10 | Auditoria obrigatoria: conciliacao (ACAO='CO') e divergencia (ACAO='DV') com valores antes/depois | legacy/natural-programs/BATCHCON.NSN#L232-L264 | AUDITORIA.SEQ-AUDIT, ACAO, VLR-ANTERIOR, VLR-NOVO | ALTO | Dois tipos de registro: 'CO' para OK, 'DV' para divergencia |
+| BR-CALC-01 | Tabela de fatores regionais: 27 regioes com variacao 1.00 a 1.40 (Norte/Nordeste ate 40% bonus) | legacy/natural-programs/CALCBENF.NSN#L78-L103 | COD-REGIAO | ALTO | Duplicada no BATCHPGT. Regiao 99 (ESPEC) com fator 1.0 |
+| BR-CALC-02 | Fator familiar: 0 dep→1.0; 1-2→1.0+(N×0.05); 3-4→1.1+((N-2)×0.03); 5+→1.16+((N-4)×0.02) | legacy/natural-programs/CALCBENF.NSN#L144-L163 | BENEFICIARIO.NUM-DEPENDENTES | CRITICO | Progressao nao linear. 5 dep = +16% permanente |
+| BR-CALC-03 | Fator renda 5 faixas: <=300(1.0), <=600(0.85), <=1000(0.70), <=1500(0.55), >1500(0.40) | legacy/natural-programs/CALCBENF.NSN#L134-L142 | BENEFICIARIO.RENDA-FAMILIAR | CRITICO | Inversamente proporcional a renda |
+| BR-CALC-04 | Fator idade: <18→1.05; 18-59→1.0; 60-64→1.1; 65+→1.15 | legacy/natural-programs/CALCBENF.NSN#L167-L180 | BENEFICIARIO.DT-NASCIMENTO | ALTO | Idosos +15%, criancas +5% |
+| BR-CALC-05 | Formula principal: VLR_BENF = BASE × FATOR_REG × FATOR_FAM × FATOR_RND × FATOR_IDADE | legacy/natural-programs/CALCBENF.NSN#L195-L197 | Multiplos | CRITICO | 4 fatores compostos. Maximo teorico +88% |
+| BR-CALC-06 | Truncamento para 2 casas decimais (mult 100, int, div 100) | legacy/natural-programs/CALCBENF.NSN#L200-L202 | #VLR-TEMP | MEDIO | Nao e arredondamento padrao |
+| BR-CALC-07 | 13o salario em dezembro: VLR_13 = BASE × FATOR_REG × FATOR_IDADE (SEM familiar/renda) | legacy/natural-programs/CALCBENF.NSN#L215-L221 | PAGAMENTO.TIPO-PGTO='D' | CRITICO | 13o ~30-40% menor que mes regular |
+| BR-CALC-08 | Abono natalino 15% em dezembro para programas TIPO='A' | legacy/natural-programs/CALCBENF.NSN#L224-L230 | PROGRAMA-SOCIAL.TIPO-PROGRAMA | ALTO | Bonus exclusivo tipo A. Criterio nao documentado |
+| BR-CALC-09 | Desconto simplificado: 3% se VLR_BRUTO > R$500 | legacy/natural-programs/CALCBENF.NSN#L238-L244 | #VLR-DESC | MEDIO | Versao simplificada — CALCDSCT tem 4 aliquotas |
+| BR-CORR-01 | Correcao retroativa por IPCA: indice acumulado × valor original | legacy/natural-programs/CALCCORR.NSN#L104-L116 | PAGAMENTO.VLR-BRUTO, VLR-CORRECAO | ALTO | Aplica apenas se diferenca > 0 |
+| BR-CORR-02 | Tabela IPCA carregada apenas para 2010-2012 (ultima carga: 2014) | legacy/natural-programs/CALCCORR.NSN#L38-L80 | #IPCA-ANO | CRITICO | Correcoes 2013+ usam indices obsoletos |
+| BR-CORR-03 | Idempotencia: somente registros com IND-CORRIGIDO != 'S' | legacy/natural-programs/CALCCORR.NSN#L97-L101 | PAGAMENTO.IND-CORRIGIDO | MEDIO | Sem mecanismo de retry |
+| BR-CORR-04 | Plano Verao (comentado): periodo 01/1989-01/1991 com multiplicador 2.75x | legacy/natural-programs/CALCCORR.NSN#L39-L50 | (desativado) | CRITICO | EGG-001: codigo morto marcado "NAO REMOVER" |
+| BR-DSCT-01 | Desconto social 4 aliquotas: <=500(3%), <=1000(5%), <=2000(7%), >2000(9%) | legacy/natural-programs/CALCDSCT.NSN#L43-L49 | PAGAMENTO.VLR-BRUTO | ALTO | Progressividade. Base R$500 pode estar desatualizada |
+| BR-DSCT-02 | Teto maximo desconto: 30% do bruto (EXCETO judicial) | legacy/natural-programs/CALCDSCT.NSN#L88-L92 | #VLR-MAX-DSCT | ALTO | Judicial sem protecao — risco de liquido negativo |
+| BR-DSCT-03 | 6 tipos de desconto: J=Judicial, P=Pensao, I=Imposto, S=Sindical(1%), C=Contribuicao, A=Administrativo | legacy/natural-programs/CALCDSCT.NSN#L107-L153 | TIPO-DSCT | ALTO | Sindical fixo 1%. Demais variaveis |
+| BR-DSCT-04 | Desconto judicial sem teto ("JUDICIAL NAO TEM TETO") | legacy/natural-programs/CALCDSCT.NSN#L119-L130 | TIPO-DSCT='J' | CRITICO | Pode levar liquido a zero/negativo |
+| BR-DSCT-05 | Vigencia de descontos: DT-FIM < HOJE ou DT-INICIO > HOJE → ignorado. DT-FIM=0 → sem limite | legacy/natural-programs/CALCDSCT.NSN#L109-L116 | DT-INICIO-DSCT, DT-FIM-DSCT | MEDIO | Comportamento implicito para data zero |
+| BR-DSCT-06 | Valor fixo (VLR-DSCT > 0) tem prioridade sobre percentual (PCT-DSCT) | legacy/natural-programs/CALCDSCT.NSN#L124-L153 | VLR-DSCT, PCT-DSCT | MEDIO | Nao documentado. Risco de sobre-desconto |
+| BR-VAL-01 | CPF validado por Mod-11 com 2 digitos verificadores (canonica Receita Federal) | legacy/natural-programs/VALBENEF.NSN#L205-L238 | BENEFICIARIO.NUM-CPF | CRITICO | Duplicada em VALDOCS e CADBENEF |
+| BR-VAL-02 | CPF com todos 11 digitos iguais e rejeitado (exceto prefixo 000 = "TESTE GOVERNO") | legacy/natural-programs/VALBENEF.NSN#L187-L203 | BENEFICIARIO.NUM-CPF | CRITICO | VALDOCS NAO implementa esta verificacao |
+| BR-VAL-03 | EXCECAO: CPF prefixo 000 com digitos iguais aceito como "TESTE GOVERNO" | legacy/natural-programs/VALBENEF.NSN#L196-L200 | BENEFICIARIO.NUM-CPF | CRITICO | Backdoor explicito no codigo |
+| BR-VAL-04 | Data nascimento: ano 1900-atual, mes 1-12, dia 1-max do mes | legacy/natural-programs/VALBENEF.NSN#L242-L258 | BENEFICIARIO.DT-NASCIMENTO | ALTO | Formato AAAAMMDD |
+| BR-VAL-05 | Fevereiro sempre aceita dia 29 sem verificar bissexto | legacy/natural-programs/VALBENEF.NSN#L96 | BENEFICIARIO.DT-NASCIMENTO | MEDIO | Bug sutil: 29/02 aceito em qualquer ano |
+| BR-VAL-06 | Nome obrigatorio com pelo menos 1 espaco (nome + sobrenome) | legacy/natural-programs/VALBENEF.NSN#L262-L277 | BENEFICIARIO.NOME-COMPLETO | ALTO | Alteracao 2010. Nao valida caracteres invalidos |
+| BR-VAL-07 | UF validada contra 27 estados hardcoded. UF em branco aceita silenciosamente | legacy/natural-programs/VALBENEF.NSN#L66-L92 | BENEFICIARIO.UF | MEDIO | Campo opcional |
+| BR-VAL-08 | Status aceito: A, S, C, I, D. Outro valor rejeitado | legacy/natural-programs/VALBENEF.NSN#L164-L169 | BENEFICIARIO.SIT-BENEFICIARIO | ALTO | Consistente com DDM |
+| BR-VAL-09 | Validacao acumulativa: ate 10 erros simultaneos | legacy/natural-programs/VALBENEF.NSN#L31 | — | MEDIO | Array #MSG-ERRO(10). Nao para no primeiro erro |
+| BR-VAL-10 | CEP e SEXO declarados mas NUNCA validados neste programa | legacy/natural-programs/VALBENEF.NSN#L17-L19 | BENEFICIARIO.CEP, SEXO | MEDIO | CEP sem validacao. SEXO so validado em CADBENEF |
+| BR-DOC-01 | CPF = 0 rejeitado imediatamente antes do calculo de DV | legacy/natural-programs/VALDOCS.NSN#L102-L105 | BENEFICIARIO.NUM-CPF | ALTO | Diferente de VALBENEF |
+| BR-DOC-02 | CPF validado por Mod-11 SEM checagem de digitos todos iguais | legacy/natural-programs/VALDOCS.NSN#L100-L143 | BENEFICIARIO.NUM-CPF | CRITICO | Inconsistente com VALBENEF |
+| BR-DOC-03 | RG obrigatorio, minimo 5 caracteres | legacy/natural-programs/VALDOCS.NSN#L146-L163 | BENEFICIARIO.RG-NUMERO | MEDIO | Comprimento por posicao do primeiro espaco |
+| BR-DOC-04 | 8 prefixos CPF especiais: 000, 001, 002, 010, 011, 099, 100, 999 | legacy/natural-programs/VALDOCS.NSN#L49-L56 | — | CRITICO | Faixas de teste governo hardcoded |
+| BR-DOC-05 | BACKDOOR: prefixo especial apaga TODOS erros, forca VALIDO. EGG-002 | legacy/natural-programs/VALDOCS.NSN#L168-L182 | — | CRITICO | Subrotina CHECK-DOC-ESPECIAL. Backdoor de teste em producao |
+| BR-DOC-06 | TITULO ELEITOR e CTPS capturados via INPUT mas nunca validados | legacy/natural-programs/VALDOCS.NSN#L22-L23 | — | MEDIO | Codigo morto desde 1998 |
+| BR-DOC-07 | DOCUMENTOS-OK declarado mas NUNCA atualizado pelo programa | legacy/natural-programs/VALDOCS.NSN#L18 | BENEFICIARIO.DOCUMENTOS-OK | ALTO | VALELEG depende deste flag. Quem o seta? |
+| BR-DOC-08 | CHECK-DOC-ESPECIAL executa APOS validacoes, podendo REVERTER resultados invalidos | legacy/natural-programs/VALDOCS.NSN#L85-L88 | — | CRITICO | Ordem: valida CPF → valida RG → limpa tudo |
+| BR-DOC-09 | Maximo 5 mensagens de erro (vs 10 no VALBENEF) | legacy/natural-programs/VALDOCS.NSN#L25 | — | BAIXO | Inconsistencia de design |
+| BR-ELEG-01 | Beneficiario deve existir no ARQ 150 (busca por CPF) | legacy/natural-programs/VALELEG.NSN#L69-L84 | BENEFICIARIO.NUM-CPF | ALTO | FIND com flag #FOUND-B |
+| BR-ELEG-02 | Programa social deve existir (busca por COD-PROGRAMA) | legacy/natural-programs/VALELEG.NSN#L87-L97 | PROGRAMA-SOCIAL.COD-PROGRAMA | ALTO | Comentario diz ARQ 155, DDM define FNR 151 |
+| BR-ELEG-03 | Programa deve estar ativo (STATUS-PROG='A'). Inativo aborta | legacy/natural-programs/VALELEG.NSN#L99-L102 | PROGRAMA-SOCIAL.SIT-PROGRAMA | ALTO | ESCAPE ROUTINE sem registrar motivo |
+| BR-ELEG-04 | REGIAO 99 (Internacional/Diplomatico) bypassa TODAS verificacoes. MYS-008 resolvido | legacy/natural-programs/VALELEG.NSN#L107-L111 | BENEFICIARIO.COD-REGIAO | CRITICO | Adicionado 2013 por Anderson Lima. Sem auditoria |
+| BR-ELEG-05 | Status 'A' unico aceito. S/C/D/I → nao elegivel com mensagem especifica | legacy/natural-programs/VALELEG.NSN#L116-L134 | BENEFICIARIO.SIT-BENEFICIARIO | ALTO | Verifica todos, nao para no primeiro |
+| BR-ELEG-06 | Faixa etaria: IDADE-MIN e IDADE-MAX do programa (se > 0) verificados | legacy/natural-programs/VALELEG.NSN#L139-L152 | PROGRAMA-SOCIAL.IDADE-MIN, IDADE-MAX | ALTO | Valor 0 desativa check |
+| BR-ELEG-07 | Renda familiar: se RENDA-MAX > 0, renda nao pode exceder | legacy/natural-programs/VALELEG.NSN#L157-L163 | PROGRAMA-SOCIAL.RENDA-MAX | CRITICO | Verificacao generica do programa |
+| BR-ELEG-08 | Tipo A (Assistencial): renda > R$600 sem dependentes → inelegivel. Exige DOCUMENTOS-OK='S' | legacy/natural-programs/VALELEG.NSN#L169-L182 | BENEFICIARIO.VLR-RENDA-FAMILIAR, NUM-DEPENDENTES | CRITICO | R$600 hardcoded. Com dependentes, aceita |
+| BR-ELEG-09 | Tipo P (Previdenciario): idade minima 60 hardcoded | legacy/natural-programs/VALELEG.NSN#L183-L189 | BENEFICIARIO.DT-NASCIMENTO | ALTO | Pode conflitar com IDADE-MIN do programa |
+| BR-ELEG-10 | Tipo T (Trabalho): idade 16-65 hardcoded | legacy/natural-programs/VALELEG.NSN#L190-L196 | BENEFICIARIO.DT-NASCIMENTO | ALTO | Pode conflitar com IDADE-MIN/MAX |
+| BR-ELEG-11 | Tipo desconhecido (nao A/P/T) → inelegivel | legacy/natural-programs/VALELEG.NSN#L197-L201 | PROGRAMA-SOCIAL.TIPO-PROGRAMA | MEDIO | Clausula NONE |
+| BR-ELEG-12 | Elegibilidade especifica: 1o char='R' → exige NIS; 2o char='D' → exige dependentes | legacy/natural-programs/VALELEG.NSN#L223-L242 | PROGRAMA-SOCIAL.COD-ELEGIBILIDADE | ALTO | Apenas 2 dos 5 chars interpretados |
+| BR-ELEG-13 | Calculo idade aproximado: ano_atual - ano_nascimento (ignora mes/dia) | legacy/natural-programs/VALELEG.NSN#L72-L73 | BENEFICIARIO.DT-NASCIMENTO | MEDIO | Pode errar ±1 ano |
+| BR-ELEG-14 | Rejeicao acumulativa: ate 10 motivos simultaneos | legacy/natural-programs/VALELEG.NSN#L41 | — | MEDIO | Exceto regiao 99 e abortos |
+| BR-ELEG-15 | NAO verifica se beneficiario ja esta inscrito no programa | legacy/natural-programs/VALELEG.NSN#L19 | BENEFICIARIO.COD-PROGRAMA | BAIXO | Verificacao pre-inscricao |
+| BR-CONS-01 | Busca por CPF (tipo 'C') ou NIS (tipo 'N'). Outro valor rejeitado | legacy/natural-programs/CONSBENF.NSN#L76-L90 | BENEFICIARIO.CPF, NIS | ALTO | Dual-key lookup |
+| BR-CONS-02 | Tipo busca em branco → default CPF ('C') | legacy/natural-programs/CONSBENF.NSN#L73-L75 | — | MEDIO | Regra silenciosa |
+| BR-CONS-03 | Tela MAP com fallback INPUT inline quando erro | legacy/natural-programs/CONSBENF.NSN#L65-L71 | — | MEDIO | Degradacao graceful |
+| BR-CONS-04 | CPF mascarado ***.***.XXX-XX (oculta 6 primeiros, exibe 5 ultimos) | legacy/natural-programs/CONSBENF.NSN#L149-L168 | BENEFICIARIO.CPF | CRITICO | Bug conhecido: CPF < 10^10 mostra primeiros 3 digitos |
+| BR-CONS-05 | Status mapeado: A=ATIVO, S=SUSPENSO, C=CANCELADO, I=INATIVO, D=DESLIGADO | legacy/natural-programs/CONSBENF.NSN#L97-L110 | BENEFICIARIO.STATUS | ALTO | Tratamento NONE→DESCONHECIDO |
+| BR-CONS-06 | Historico pagamentos limitado a ultimos 12 registros | legacy/natural-programs/CONSBENF.NSN#L127-L140 | PAGAMENTO.CPF-BENEF | ALTO | Hardcoded 12. Sem paginacao |
+| BR-CONS-07 | Leitura por READ BY CPF-BENEF (ascendente). Para quando CPF muda | legacy/natural-programs/CONSBENF.NSN#L128-L132 | PAGAMENTO.CPF-BENEF | MEDIO | Sem filtro de periodo |
+| BR-CONS-08 | Mensagem "NENHUM PAGAMENTO ENCONTRADO" se historico vazio | legacy/natural-programs/CONSBENF.NSN#L143-L145 | — | BAIXO | Feedback operador |
+| BR-CONS-09 | "BENEFICIARIO NAO ENCONTRADO" aborta com ESCAPE ROUTINE | legacy/natural-programs/CONSBENF.NSN#L92-L94 | — | ALTO | Fluxo interrompido |
+| BR-CONS-10 | Exibe 15 campos cadastrais na tela (renda, endereco, NIS, CPF) | legacy/natural-programs/CONSBENF.NSN#L112-L125 | BENEFICIARIO.* | MEDIO | Exposicao dados sensiveis sem controle de acesso |
+| BR-RPGT-01 | Filtro periodo por competencia: COMP-INI a COMP-FIM | legacy/natural-programs/RELPGT.NSN#L70-L74 | PAGAMENTO.COMPETENCIA | ALTO | READ BY COMPETENCIA indexado |
+| BR-RPGT-02 | Filtro programa: COD-PROG-FILTRO=0 → todos os programas | legacy/natural-programs/RELPGT.NSN#L76-L79 | PAGAMENTO.COD-PROGRAMA | ALTO | Zero como wildcard |
+| BR-RPGT-03 | Quebra (control-break) por programa: subtotal quando COD-PROGRAMA muda | legacy/natural-programs/RELPGT.NSN#L82-L88 | PAGAMENTO.COD-PROGRAMA | ALTO | Requer ordenacao estavel |
+| BR-RPGT-04 | Lookup beneficiario para cada pagamento: FIND por CPF (N+1 query) | legacy/natural-programs/RELPGT.NSN#L91-L96 | BENEFICIARIO.CPF, NOME, UF | MEDIO | Se nao encontra, nome/UF ficam branco |
+| BR-RPGT-05 | CPF mascarado ***.XXX.XXX-XX (oculta 3 primeiros, exibe posicoes 4-11) | legacy/natural-programs/RELPGT.NSN#L99-L102 | PAGAMENTO.CPF-BENEF | CRITICO | Mascara DIFERENTE do CONSBENF |
+| BR-RPGT-06 | Tipo pagamento: N=NORMAL, D=DECIMO, T=TERCEIRO. Outros→OUTRO | legacy/natural-programs/RELPGT.NSN#L105-L114 | PAGAMENTO.TIPO-PGTO | ALTO | TERCEIRO ('T') nao gerado por nenhum programa conhecido |
+| BR-RPGT-07 | Status pagamento: G=GERADO, P=PAGO, C=CANCELAD, D=DEVOLVID, E=ESTORNAD | legacy/natural-programs/RELPGT.NSN#L117-L130 | PAGAMENTO.STATUS-PGTO | ALTO | Descricoes truncadas 8 chars |
+| BR-RPGT-08 | Paginacao mainframe: 66 linhas/pagina. Form feed '/' | legacy/natural-programs/RELPGT.NSN#L58 | — | BAIXO | Cabecalho 6 linhas. Reserva 5 para footer |
+| BR-RPGT-09 | Acumuladores gerais: TOT-BRUTO, TOT-DESC, TOT-LIQ, TOT-ABONO, QTD-REG (N13.2) | legacy/natural-programs/RELPGT.NSN#L140-L147 | PAGAMENTO.VLR-BRUTO, VLR-DESCONTO, VLR-LIQUIDO, VLR-ABONO | CRITICO | Acumula ABONO mas nao imprime por linha |
+| BR-RPGT-10 | Subtotais por programa: apenas BRUTO e LIQUIDO + QTD (sem DESC/ABONO) | legacy/natural-programs/RELPGT.NSN#L148-L150 | — | MEDIO | Assimetria com total geral |
+| BR-RPGT-11 | Total geral imprime ABONO em linha separada | legacy/natural-programs/RELPGT.NSN#L157-L163 | — | MEDIO | Adicionado 2010 Jose Ferreira |
+| BR-RPGT-12 | Cabecalho: periodo, data atual, numero pagina | legacy/natural-programs/RELPGT.NSN#L188-L199 | — | BAIXO | Layout padrao mainframe |
+| BR-RAUD-01 | Acoes de EXCLUSAO ('EX') SEMPRE filtradas do relatorio | legacy/natural-programs/RELAUDIT.NSN#L97-L100 | AUDITORIA.ACAO | CRITICO | Exclusoes invisiveis — so via SYSAOS |
+| BR-RAUD-02 | Filtro periodo: DT-INI a DT-FIM. ESCAPE TOP/BOTTOM | legacy/natural-programs/RELAUDIT.NSN#L87-L93 | AUDITORIA.DT-EVENTO | ALTO | Leitura sequencial por data |
+| BR-RAUD-03 | Default DT-INI = 19970101 (inception SIFAP). DT-FIM = data atual | legacy/natural-programs/RELAUDIT.NSN#L78-L83 | — | MEDIO | Sem data inicial lista TODO historico |
+| BR-RAUD-04 | Filtro acao opcional: exibe apenas eventos da acao especificada | legacy/natural-programs/RELAUDIT.NSN#L103-L108 | AUDITORIA.ACAO | MEDIO | Filtro por valor exato |
+| BR-RAUD-05 | Filtro usuario opcional | legacy/natural-programs/RELAUDIT.NSN#L111-L116 | AUDITORIA.USUARIO | MEDIO | Funcional |
+| BR-RAUD-06 | Filtro tabela opcional | legacy/natural-programs/RELAUDIT.NSN#L119-L124 | AUDITORIA.TABELA-REF | MEDIO | Funcional |
+| BR-RAUD-07 | Contadores por acao: IN, AL, CO, CN, DV. Outros→OUTRA | legacy/natural-programs/RELAUDIT.NSN#L128-L147 | AUDITORIA.ACAO | ALTO | 'CO' = CONCILIACAO aqui, mas DDM diz CO = CONSULTA |
+| BR-RAUD-08 | Hora formatada HHMMSS → HH:MM:SS | legacy/natural-programs/RELAUDIT.NSN#L150-L152 | AUDITORIA.HR-EVENTO | BAIXO | Formatacao apresentacao |
+| BR-RAUD-09 | Saida dual: T=Tela (WRITE) ou I=Impressora (PRINT). Default T | legacy/natural-programs/RELAUDIT.NSN#L74-L76 | — | MEDIO | Tela omite DESCRICAO |
+| BR-RAUD-10 | Tela OMITE campo DESCRICAO (A80) — so visivel na impressora | legacy/natural-programs/RELAUDIT.NSN#L158-L167 | AUDITORIA.DESCRICAO | ALTO | Info critica nao visivel online |
+| BR-RAUD-11 | Resumo final: total registros, exibidos, filtrados, breakdown por acao | legacy/natural-programs/RELAUDIT.NSN#L172-L204 | — | MEDIO | Resumo completo |
+| BR-RAUD-12 | Paginacao: 66 linhas/pag. Impressora 120 col, tela 100 col | legacy/natural-programs/RELAUDIT.NSN#L155-L157 | — | BAIXO | Layout diferente por tipo saida |
+| BR-RAUD-13 | Registros filtrados contabilizados separadamente (#QTD-FILTRADOS) | legacy/natural-programs/RELAUDIT.NSN#L95 | — | MEDIO | Permite verificar omissoes |
 
 > Adicione mais linhas conforme necessario. Lembre-se: existem **10 regras escondidas** no codigo!
 
@@ -87,6 +175,9 @@
 - BR-CON-03 (conversao centavos → reais)
 - BR-CON-05 (tolerancia R$0,01)
 - BR-REL-03 (arredondamento round vs truncamento — DIVERGENCIA)
+- BR-CALC-01 a BR-CALC-09 (motor de calculo completo: 4 fatores, 13o, abono, desconto simplificado)
+- BR-CORR-01 a BR-CORR-04 (correcao retroativa IPCA, Plano Verao)
+- BR-DSCT-01 a BR-DSCT-06 (descontos 4 aliquotas, 6 tipos, teto 30%, judicial sem teto)
 
 ### Validacoes de Status
 - BR-008 (status inicial beneficiario `A`)
@@ -97,12 +188,20 @@
 - BR-REL-04 (5 categorias: G, P, C, D, E)
 - BR-CON-06/07/08 (transicoes G→P, G→D, G→E por COD_RET CNAB)
 - BR-CON-09 (retorno desconhecido mantem status)
+- BR-ELEG-05 (status A unico aceito para elegibilidade)
+
+### Validacoes Cadastrais e de Documentos
+- BR-VAL-01 a BR-VAL-10 (CPF Mod-11, data nascimento, nome, UF, status)
+- BR-DOC-01 a BR-DOC-09 (CPF, RG, backdoor TESTE GOVERNO, DOCUMENTOS-OK)
+- BR-ELEG-01 a BR-ELEG-15 (elegibilidade por tipo programa, regiao 99, renda, idade)
 
 ### Regras de Autorizacao
 - BR-001 (operacao permitida apenas I/A)
 - BR-006 e BR-007 (controle de existencia para incluir/alterar)
 - BR-PGT-02 (idempotencia: 1 pagamento por CPF por competencia)
 - BR-PGT-03 (programa deve existir e estar ativo)
+- BR-DOC-05 (backdoor CHECK-DOC-ESPECIAL — EGG-002)
+- BR-ELEG-04 (regiao 99 bypassa elegibilidade — MYS-008)
 
 ### Regras de Negocio Temporais
 - BR-010 (datas de cadastro/atualizacao com data corrente)
@@ -111,6 +210,8 @@
 - BR-PGT-13 (abono natalino somente em dezembro para tipo A)
 - BR-PGT-17 (tipo pagamento 'D' para dezembro)
 - BR-PGT-19 (calculo de idade aproximado — ignora mes/dia)
+- BR-DSCT-05 (vigencia de descontos com DT-FIM=0 → sem limite)
+- BR-CORR-02 (tabela IPCA congelada 2010-2012)
 
 ### Conciliacao Bancaria
 - BR-CON-01 (somente registros CNAB tipo detalhe)
@@ -118,15 +219,19 @@
 - BR-CON-04 (match por chave tripla)
 - BR-CON-10 (auditoria obrigatoria CO/DV)
 
-### Relatorios
+### Consulta e Relatorios
 - BR-REL-01 a BR-REL-08 (filtro, agregacao, arredondamento, formato)
+- BR-CONS-01 a BR-CONS-10 (busca dual CPF/NIS, mascara CPF, historico 12 registros)
+- BR-RPGT-01 a BR-RPGT-12 (relatorio pagamentos: quebra programa, mascaramento, paginacao)
+- BR-RAUD-01 a BR-RAUD-13 (auditoria: exclusoes ocultas, saida dual, filtros, contadores)
 
 ## Resumo Estatistico
 
-- Total de regras encontradas: 52 (Par 1: 15, Par 2: 37)
-- Regras criticas: 18
-- Regras alto risco: 17
-- Regras medio risco: 13
-- Regras baixo risco: 1
-- Regras sem documentacao (escondidas): 3
-- Programas cobertos: 6 / 15 (CADBENEF, CADDEPEND, CADPROG, BATCHPGT, BATCHREL, BATCHCON)
+- Total de regras encontradas: **120** (Par 1: 15, Par 2: 37, Par 3: 19, Par 4: 34, Par 5: 35)
+- Regras criticas: 34
+- Regras alto risco: 41
+- Regras medio risco: 34
+- Regras baixo risco: 8
+- Regras sem documentacao (escondidas): 10 / 10
+- Programas cobertos: **15 / 15**
+- Easter eggs encontrados: **3 / 3** (EGG-001 Plano Verao, EGG-002 Backdoor VALDOCS, EGG-003 Banco Real)
