@@ -18,29 +18,29 @@ description: "Lista dos misterios plantados no codigo legado SIFAP. Encontre tod
 
 Marque [x] quando encontrar:
 
-- [ ] **MYS-001** (★★): Um programa modifica silenciosamente o status do beneficiario baseado em um criterio demografico. Onde? Por que?
-- [ ] **MYS-002** (★): Um limite numerico esta hardcoded no codigo mas contradiz a capacidade definida no DDM. Qual e o limite? Em qual programa?
-- [ ] **MYS-003** (★★★): Uma variavel misteriosa e usada em calculos mas nunca foi documentada - ninguem sabe de onde veio a constante. Qual variavel?
-- [ ] **MYS-004** (★★★): Em um mes especifico do ano, o calculo de beneficio muda completamente. Qual mes? O que muda?
-- [ ] **MYS-005** (★★★): O sistema usa uma tecnica de arredondamento que causa perda sistematica de centavos. Qual tecnica? Onde?
-- [ ] **MYS-006** (★★): Um tipo de desconto ignora uma regra de limite que se aplica a todos os outros. Qual tipo? Por que?
-- [ ] **MYS-007** (★): Certos CPFs sao aceitos sem validacao real. Quais? Isso e um bug ou feature?
+- [x] **MYS-001** (★★): CADBENEF.NSN#L156-L169 — idade > 75 muda status para 'S' (suspenso) automaticamente, sem documentacao funcional. Criterio demografico: idade.
+- [x] **MYS-002** (★): CADDEPEND.NSN#L63-L66 — limite de 5 dependentes hardcoded no codigo, mas DDM BENEFICIARIO define PE com ate 10 ocorrencias.
+- [x] **MYS-003** (★★★): CADPROG.NSN#L87-L88 — constante magica `0.347215` usada em FATOR-K = 1 + (FATOR-REAJ × 0.347215). Sem justificativa funcional.
+- [x] **MYS-004** (★★★): BATCHPGT.NSN#L291-L303 — em DEZEMBRO: 13o salario usa formula simplificada (sem fator familiar/renda), e abono de 15% para programas tipo 'A'.
+- [x] **MYS-005** (★★★): BATCHPGT.NSN#L284-L285 usa TRUNCAMENTO (mult×100, int, div÷100) enquanto BATCHREL.NSN#L135-L139 usa ROUND (+0.005). Perda sistematica de centavos no truncamento.
+- [x] **MYS-006** (★★): BATCHPGT.NSN#L306-L312 — desconto simplificado de 3% flat (acima de R$500), ignora os 8 tipos de desconto do CALCDSCT (IR, judicial, consignacoes com cap 30%).
+- [x] **MYS-007** (★): CADDEPEND.NSN#L96-L101 — CPF de dependente = 0 passa na validacao de duplicidade (ignorado quando CPF=0). Permite dependentes sem identificador real.
 - [ ] **MYS-008** (★): Beneficiarios de uma regiao especifica pulam TODAS as verificacoes de elegibilidade. Qual regiao?
-- [ ] **MYS-009** (★★): O processamento batch segue uma ordem que nao e a mais logica, mas que virou dependencia de outros sistemas. Qual ordem?
-- [ ] **MYS-010** (★★★): Um tipo de evento de auditoria e sistematicamente ocultado dos relatorios. Qual tipo? Isso e intencional ou bug?
+- [x] **MYS-009** (★★): BATCHPGT.NSN#L178-L192 — processamento ordenado por CPF ascendente (comentario de 1999: "SISTEMAS DOWNSTREAM DEPENDEM DESTA ORDENACAO"). Ordem nao e por programa/regiao mas por CPF.
+- [x] **MYS-010** (★★★): BATCHPGT.NSN#L340-L345 — alteracao de 2015 "INC AUDITORIA" mas NENHUM codigo de auditoria existe. Eventos de geracao de pagamento nao sao auditados. RELAUDIT so le o que BATCHCON grava.
 
 ## Easter Eggs (3)
 
 - [ ] **EGG-001** (★): Um bloco de codigo comentado referencia uma politica economica dos anos 90 que nunca foi removida. Qual politica?
 - [ ] **EGG-002** (★): Um programa tem uma funcao de validacao especial que aceita certos documentos sem verificacao. Parece um backdoor de teste. Onde?
-- [ ] **EGG-003** (★): Codigo morto referencia uma integracao com uma empresa que nao existe mais. Qual empresa?
+- [x] **EGG-003** (★): BATCHCON.NSN#L200-L230 — bloco comentado do **Banco Real** (codigo 356), absorvido pelo Santander em 2007. Dead code desde 2005.
 
 ## Inconsistencias entre Documentacao e Codigo (bonus)
 
-- [ ] **INC-001**: Um limite documentado diverge do que o codigo permite
+- [x] **INC-001**: Limite de dependentes: DDM permite 10 (PE), codigo limita a 5 (CADDEPEND#L63-L66)
 - [ ] **INC-002**: O documento de arquitetura original nao menciona uma estrutura de dados que foi adicionada depois
-- [ ] **INC-003**: Regras criticas de calculo nao aparecem em nenhum documento
-- [ ] **INC-004**: Dois programas usam metodos de arredondamento diferentes para o mesmo tipo de valor
+- [x] **INC-003**: Formula de 4 fatores (BATCHPGT#L279-L281), constante 0.347215 (CADPROG#L87), 13o simplificado — nenhum em documentacao
+- [x] **INC-004**: BATCHPGT trunca valores monetarios; BATCHREL arredonda (+0.005) — mesmo VLR-BRUTO, metodos diferentes
 
 ## Pontuacao
 
